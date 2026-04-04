@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>technical-change-skill — TC Dashboard</title>
+  <!-- CSS is inlined by the generator for file:// compatibility -->
+  <style>/* ============================================================
+   TC Styles — Accessible Dark Theme
+   WCAG AA+ compliant, rem-based, high contrast
+   Matches Cards_bot design language
+   ============================================================ */
+
+/* --- CSS Custom Properties --- */
+:root {
+  /* Background tiers */
+  --bg:         #0d0d18;
+  --card:       #16162a;
+  --panel:      #1c1c38;
+  --border:     #2a2a54;
+
+  /* Text & accent */
+  --gold:       #d4af37;
+  --text:       #e0dcd0;     /* 13.2:1 vs --bg */
+  --dim:        #9e9a8e;     /* 6.8:1 vs --bg, 5.1:1 vs --card */
+  --link:       #58a6ff;     /* 6.2:1 vs --bg */
+  --code-text:  #aed6f1;     /* 7.1:1 vs --panel */
+
+  /* Status colors */
+  --status-planned-bg:       #2a1f5e;
+  --status-planned-border:   #7c7cf0;
+  --status-planned-text:     #b8b8ff;
+
+  --status-progress-bg:      #1a3a1a;
+  --status-progress-border:  #4caf50;
+  --status-progress-text:    #81c784;
+
+  --status-blocked-bg:       #3a1a1a;
+  --status-blocked-border:   #f44336;
+  --status-blocked-text:     #ef9a9a;
+
+  --status-implemented-bg:   #1a2a3a;
+  --status-implemented-border: #2196f3;
+  --status-implemented-text: #90caf9;
+
+  --status-tested-bg:        #3a2a1a;
+  --status-tested-border:    #ff9800;
+  --status-tested-text:      #ffcc80;
+
+  --status-deployed-bg:      #1a3a2a;
+  --status-deployed-border:  #26a69a;
+  --status-deployed-text:    #80cbc4;
+
+  /* Scope/change type colors */
+  --scope-feature:       #4caf50;
+  --scope-bugfix:        #f44336;
+  --scope-refactor:      #ff9800;
+  --scope-infrastructure:#2196f3;
+  --scope-documentation: #9c27b0;
+  --scope-hotfix:        #e91e63;
+  --scope-enhancement:   #00bcd4;
+
+  /* Priority colors */
+  --priority-critical:   #f44336;
+  --priority-high:       #ff9800;
+  --priority-medium:     #ffc107;
+  --priority-low:        #4caf50;
+
+  /* Test status colors */
+  --test-pass:           #4caf50;
+  --test-fail:           #f44336;
+  --test-pending:        #ffc107;
+  --test-skip:           #9e9a8e;
+  --test-blocked:        #f44336;
+
+  /* Layout */
+  --max-width:  75rem;
+  --radius:     0.5rem;
+  --transition: 0.2s ease;
+
+  /* Typography scale (rem) */
+  --font-xs:    0.75rem;
+  --font-sm:    0.875rem;
+  --font-base:  1rem;
+  --font-lg:    1.125rem;
+  --font-xl:    1.25rem;
+  --font-2xl:   1.5rem;
+  --font-3xl:   1.875rem;
+  --font-4xl:   2.25rem;
+
+  /* Spacing scale (rem) */
+  --space-xs:   0.25rem;
+  --space-sm:   0.5rem;
+  --space-md:   1rem;
+  --space-lg:   1.5rem;
+  --space-xl:   2rem;
+  --space-2xl:  3rem;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%; /* Respects user's browser font size setting */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Skip Link (Accessibility) --- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  background: var(--gold);
+  color: var(--bg);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: var(--font-lg);
+  z-index: 9999;
+  text-decoration: none;
+  transition: top var(--transition);
+}
+
+.skip-link:focus {
+  top: var(--space-md);
+}
+
+/* --- Focus Visible (Accessibility) --- */
+*:focus-visible {
+  outline: 0.1875rem solid var(--link);
+  outline-offset: 0.125rem;
+  border-radius: 0.125rem;
+}
+
+/* --- Links --- */
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+/* --- Layout --- */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* --- Header --- */
+.tc-header {
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 0.125rem solid var(--gold);
+}
+
+.tc-header h1 {
+  font-size: var(--font-3xl);
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  word-break: break-word;
+}
+
+.tc-header .subtitle {
+  font-size: var(--font-lg);
+  color: var(--dim);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: var(--space-md);
+  font-size: var(--font-sm);
+  color: var(--link);
+}
+
+.back-link::before {
+  content: '\2190 ';
+}
+
+/* --- Status Badges --- */
+.badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 0.0625rem solid;
+  white-space: nowrap;
+}
+
+.badge-planned {
+  background: var(--status-planned-bg);
+  border-color: var(--status-planned-border);
+  color: var(--status-planned-text);
+}
+
+.badge-in_progress {
+  background: var(--status-progress-bg);
+  border-color: var(--status-progress-border);
+  color: var(--status-progress-text);
+}
+
+.badge-blocked {
+  background: var(--status-blocked-bg);
+  border-color: var(--status-blocked-border);
+  color: var(--status-blocked-text);
+}
+
+.badge-implemented {
+  background: var(--status-implemented-bg);
+  border-color: var(--status-implemented-border);
+  color: var(--status-implemented-text);
+}
+
+.badge-tested {
+  background: var(--status-tested-bg);
+  border-color: var(--status-tested-border);
+  color: var(--status-tested-text);
+}
+
+.badge-deployed {
+  background: var(--status-deployed-bg);
+  border-color: var(--status-deployed-border);
+  color: var(--status-deployed-text);
+}
+
+/* Scope badges */
+.badge-feature      { background: #1a3a1a; border-color: var(--scope-feature); color: #81c784; }
+.badge-bugfix       { background: #3a1a1a; border-color: var(--scope-bugfix); color: #ef9a9a; }
+.badge-refactor     { background: #3a2a1a; border-color: var(--scope-refactor); color: #ffcc80; }
+.badge-infrastructure { background: #1a2a3a; border-color: var(--scope-infrastructure); color: #90caf9; }
+.badge-documentation { background: #2a1a3a; border-color: var(--scope-documentation); color: #ce93d8; }
+.badge-hotfix       { background: #3a1a2a; border-color: var(--scope-hotfix); color: #f48fb1; }
+.badge-enhancement  { background: #1a3a3a; border-color: var(--scope-enhancement); color: #80deea; }
+
+/* Priority badges */
+.badge-critical { background: #3a1a1a; border-color: var(--priority-critical); color: #ef9a9a; }
+.badge-high     { background: #3a2a1a; border-color: var(--priority-high); color: #ffcc80; }
+.badge-medium   { background: #3a3a1a; border-color: var(--priority-medium); color: #fff176; }
+.badge-low      { background: #1a3a1a; border-color: var(--priority-low); color: #81c784; }
+
+/* Test badges */
+.badge-pass    { background: #1a3a1a; border-color: var(--test-pass); color: #81c784; }
+.badge-fail    { background: #3a1a1a; border-color: var(--test-fail); color: #ef9a9a; }
+.badge-pending { background: #3a3a1a; border-color: var(--test-pending); color: #fff176; }
+.badge-skip    { background: #2a2a2a; border-color: var(--test-skip); color: var(--dim); }
+
+/* --- Stats Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.stat-card {
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  text-align: center;
+  transition: border-color var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--gold);
+}
+
+.stat-card .stat-value {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+}
+
+.stat-card .stat-label {
+  font-size: var(--font-sm);
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: var(--space-xs);
+}
+
+/* --- Sections --- */
+section {
+  margin-bottom: var(--space-2xl);
+}
+
+section h2 {
+  font-size: var(--font-2xl);
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 0.0625rem solid var(--border);
+}
+
+section h3 {
+  font-size: var(--font-xl);
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+/* --- Cards --- */
+.card {
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  transition: border-color var(--transition);
+}
+
+.card:hover {
+  border-color: var(--gold);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.card-title {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-meta {
+  font-size: var(--font-sm);
+  color: var(--dim);
+}
+
+/* --- Tables --- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: var(--space-md);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-sm);
+}
+
+thead th {
+  background: var(--panel);
+  color: var(--gold);
+  font-weight: 700;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 0.125rem solid var(--border);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 0.0625rem solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:hover {
+  background: var(--panel);
+}
+
+/* --- Code / Evidence --- */
+.code-block {
+  background: var(--panel);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: var(--font-sm);
+  color: var(--code-text);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* --- Timeline (Revision History) --- */
+.timeline {
+  position: relative;
+  padding-left: var(--space-xl);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 0.125rem;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-xl) + 0.25rem);
+  top: var(--space-lg);
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+.timeline-item .revision-id {
+  font-weight: 700;
+  color: var(--gold);
+  font-size: var(--font-sm);
+}
+
+.timeline-item .revision-meta {
+  font-size: var(--font-xs);
+  color: var(--dim);
+  margin-bottom: var(--space-sm);
+}
+
+.timeline-item .revision-summary {
+  color: var(--text);
+}
+
+/* --- Field Changes --- */
+.field-change {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-sm);
+  font-size: var(--font-sm);
+}
+
+.field-change .field-name {
+  color: var(--code-text);
+  font-family: monospace;
+}
+
+.field-change .old-value {
+  color: #ef9a9a;
+  text-decoration: line-through;
+}
+
+.field-change .new-value {
+  color: #81c784;
+}
+
+/* --- Test Cases --- */
+.test-case {
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.test-case .test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.test-case .test-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.test-case .test-id {
+  font-family: monospace;
+  color: var(--dim);
+  font-size: var(--font-sm);
+}
+
+.procedure-steps {
+  list-style: decimal;
+  padding-left: var(--space-xl);
+  margin-bottom: var(--space-md);
+  color: var(--text);
+}
+
+.procedure-steps li {
+  margin-bottom: var(--space-xs);
+  padding-left: var(--space-sm);
+}
+
+.result-label {
+  font-weight: 700;
+  color: var(--dim);
+  font-size: var(--font-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.result-value {
+  color: var(--text);
+  margin-bottom: var(--space-md);
+}
+
+/* --- Session Context --- */
+.session-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.session-field {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+}
+
+.session-field .field-label {
+  font-size: var(--font-xs);
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.session-field .field-value {
+  font-size: var(--font-base);
+  color: var(--text);
+  word-break: break-all;
+}
+
+.handoff-section {
+  background: var(--card);
+  border: 0.125rem solid var(--gold);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.handoff-section h3 {
+  color: var(--gold);
+  margin-bottom: var(--space-md);
+}
+
+.handoff-list {
+  list-style: disc;
+  padding-left: var(--space-xl);
+  color: var(--text);
+  margin-bottom: var(--space-md);
+}
+
+.handoff-list li {
+  margin-bottom: var(--space-xs);
+}
+
+/* --- Approval Section --- */
+.approval-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 0.0625rem solid var(--border);
+}
+
+.approval-status.approved {
+  border-color: var(--scope-feature);
+}
+
+.approval-status.not-approved {
+  border-color: var(--priority-medium);
+}
+
+/* --- Section Navigation --- */
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-md);
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 0.0625rem solid var(--border);
+}
+
+.section-nav a {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius);
+  font-size: var(--font-sm);
+  color: var(--link);
+  background: var(--panel);
+  border: 0.0625rem solid var(--border);
+  transition: all var(--transition);
+}
+
+.section-nav a:hover,
+.section-nav a:focus-visible {
+  background: var(--border);
+  color: var(--gold);
+  text-decoration: none;
+}
+
+/* --- Status Distribution Bar (Dashboard) --- */
+.status-bar {
+  display: flex;
+  height: 2rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+  border: 0.0625rem solid var(--border);
+}
+
+.status-bar-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--bg);
+  min-width: 2rem;
+  transition: flex-basis var(--transition);
+}
+
+.status-bar-segment.seg-planned       { background: var(--status-planned-border); }
+.status-bar-segment.seg-in_progress   { background: var(--status-progress-border); }
+.status-bar-segment.seg-blocked       { background: var(--status-blocked-border); }
+.status-bar-segment.seg-implemented   { background: var(--status-implemented-border); }
+.status-bar-segment.seg-tested        { background: var(--status-tested-border); }
+.status-bar-segment.seg-deployed      { background: var(--status-deployed-border); }
+
+/* --- Dashboard Filter Bar (CSS-only) --- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.filter-bar input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.filter-bar label {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--dim);
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filter-bar label:hover {
+  color: var(--text);
+  border-color: var(--gold);
+}
+
+.filter-bar input[type="radio"]:checked + label {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+
+.filter-bar input[type="radio"]:focus-visible + label {
+  outline: 0.1875rem solid var(--link);
+  outline-offset: 0.125rem;
+}
+
+/* CSS-only filtering */
+#filter-all:checked ~ .tc-list .tc-card { display: block; }
+#filter-planned:checked ~ .tc-list .tc-card:not([data-status="planned"]) { display: none; }
+#filter-in_progress:checked ~ .tc-list .tc-card:not([data-status="in_progress"]) { display: none; }
+#filter-blocked:checked ~ .tc-list .tc-card:not([data-status="blocked"]) { display: none; }
+#filter-implemented:checked ~ .tc-list .tc-card:not([data-status="implemented"]) { display: none; }
+#filter-tested:checked ~ .tc-list .tc-card:not([data-status="tested"]) { display: none; }
+#filter-deployed:checked ~ .tc-list .tc-card:not([data-status="deployed"]) { display: none; }
+
+/* --- TC Card (Dashboard list) --- */
+.tc-card {
+  background: var(--card);
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  transition: border-color var(--transition);
+  display: block;
+}
+
+.tc-card:hover {
+  border-color: var(--gold);
+}
+
+.tc-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tc-card .tc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.tc-card .tc-card-id {
+  font-family: monospace;
+  font-size: var(--font-sm);
+  color: var(--dim);
+}
+
+.tc-card .tc-card-title {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tc-card .tc-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  font-size: var(--font-sm);
+  color: var(--dim);
+  margin-top: var(--space-sm);
+}
+
+/* --- Activity Feed --- */
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 0.0625rem solid var(--border);
+  font-size: var(--font-sm);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  color: var(--dim);
+  white-space: nowrap;
+  min-width: 8rem;
+}
+
+.activity-text {
+  color: var(--text);
+}
+
+/* --- Footer --- */
+.tc-footer {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 0.0625rem solid var(--border);
+  font-size: var(--font-xs);
+  color: var(--dim);
+  text-align: center;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--dim);
+}
+
+.empty-state .empty-icon {
+  font-size: var(--font-4xl);
+  margin-bottom: var(--space-md);
+}
+
+/* --- Responsive --- */
+@media (max-width: 48rem) {
+  .container {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .session-info {
+    grid-template-columns: 1fr;
+  }
+
+  .tc-header h1 {
+    font-size: var(--font-2xl);
+  }
+}
+
+/* --- Print --- */
+@media print {
+  :root {
+    --bg:     #ffffff;
+    --card:   #f8f8f8;
+    --panel:  #f0f0f0;
+    --border: #cccccc;
+    --gold:   #8b7a2e;
+    --text:   #1a1a1a;
+    --dim:    #666666;
+    --link:   #0066cc;
+  }
+
+  body {
+    font-size: 10pt;
+  }
+
+  .skip-link,
+  .section-nav,
+  .back-link,
+  .filter-bar {
+    display: none !important;
+  }
+
+  .card, .stat-card, .test-case, .timeline-item {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <!-- Skip link for keyboard navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="tc-header" aria-label="Dashboard Header">
+      <h1>technical-change-skill — Technical Changes</h1>
+      <div class="subtitle">
+        <span>1 Technical Changes</span>
+        <span aria-hidden="true">&bull;</span>
+        <span>Last updated: 2026-04-03 21:49 Eastern Daylight Time</span>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+      <!-- Stats Grid -->
+      <section aria-label="Status Overview">
+        <h2>Status Overview</h2>
+        <div class="stats-grid">
+          <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-planned">Planned</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-in_progress">In Progress</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-blocked">Blocked</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-implemented">Implemented</span></span></div>
+<div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-tested">Tested</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-deployed">Deployed</span></span></div>
+        </div>
+      </section>
+
+      <!-- Status Distribution Bar -->
+      <section aria-label="Status Distribution">
+        <h2>Distribution</h2>
+        <div class="status-bar" role="img" aria-label="Tested: 1 (100%)">
+          <div class="status-bar-segment seg-tested" style="flex-basis:100.0%" title="Tested: 1 (100%)">1</div>
+        </div>
+      </section>
+
+      <!-- Filter Bar + TC List (wrapped for CSS-only filtering) -->
+      <section aria-label="Technical Changes List">
+        <h2>All Technical Changes</h2>
+        <p style="font-size: var(--font-sm); color: var(--dim); margin-bottom: var(--space-md);">
+          Use Ctrl+F (Cmd+F) for text search. Click a status filter below to narrow results.
+        </p>
+
+        <!-- CSS-only filter radios - these must be siblings of .tc-list -->
+        <div class="filter-bar">
+<input type="radio" name="filter" id="filter-all" checked>
+<label for="filter-all">All</label>
+<input type="radio" name="filter" id="filter-planned">
+<label for="filter-planned">Planned</label>
+<input type="radio" name="filter" id="filter-in_progress">
+<label for="filter-in_progress">In Progress</label>
+<input type="radio" name="filter" id="filter-blocked">
+<label for="filter-blocked">Blocked</label>
+<input type="radio" name="filter" id="filter-implemented">
+<label for="filter-implemented">Implemented</label>
+<input type="radio" name="filter" id="filter-tested">
+<label for="filter-tested">Tested</label>
+<input type="radio" name="filter" id="filter-deployed">
+<label for="filter-deployed">Deployed</label>
+</div>
+
+        <div class="tc-list">
+          <div class="tc-card" data-status="tested"><a href="records/TC-001-04-03-26-initial-skill-implementation/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-001-04-03-26-initial-skill-implementation</div><div class="tc-card-title">Initial TC Skill Implementation</div></div><span class="badge badge-tested">Tested</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 5h ago</span>
+<span>Tests: 4/4 pass</span>
+<span>Sub-TCs: 5</span>
+</div></a></div>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section aria-label="Recent Activity">
+        <h2>Recent Activity</h2>
+        <div class="card">
+          <div class="activity-item"><span class="activity-time">5h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R1: TC created — documenting the full initial implementation of the TC skill across all 7 phases</span></div>
+<div class="activity-item"><span class="activity-time">5h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R2: All phases complete — schemas, validator, CSS, templates, generators, init templates, SKILL.md, examples all implemented and verified</span></div>
+<div class="activity-item"><span class="activity-time">5h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R3: Validation and generation tests passed — example record validates, both HTML pages generated and opened in browser, published to GitHub</span></div>
+        </div>
+      </section>
+
+      <!-- Scope Breakdown -->
+      <section aria-label="Scope Breakdown">
+        <h2>Scope Breakdown</h2>
+        <div class="stats-grid">
+          <div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-feature">feature</span></span></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="tc-footer">
+      <p>Generated on 2026-04-03 21:49 Eastern Daylight Time &bull; TC Skill v1.0.0</p>
+    </footer>
+  </div>
+</body>
+</html>

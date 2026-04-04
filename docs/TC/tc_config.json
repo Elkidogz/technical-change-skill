@@ -1,0 +1,11 @@
+{
+  "project_name": "technical-change-skill",
+  "tc_root": "docs/TC",
+  "created": "2026-04-03T16:00:00-04:00",
+  "skills_library_path": "C:/Users/micha/Documents/--MINECAFT--/AI BOTS/skills_library/TC",
+  "auto_track": true,
+  "auto_regenerate_html": true,
+  "auto_regenerate_dashboard": true,
+  "default_author": "Claude",
+  "categories": ["feature", "bugfix", "refactor", "infrastructure", "documentation", "hotfix", "enhancement"]
+}

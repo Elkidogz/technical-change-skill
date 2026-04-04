@@ -1,0 +1,26 @@
+{
+  "project_name": "technical-change-skill",
+  "created": "2026-04-03T16:00:00-04:00",
+  "updated": "2026-04-03T16:00:00-04:00",
+  "next_tc_number": 2,
+  "records": [
+    {
+      "tc_id": "TC-001-04-03-26-initial-skill-implementation",
+      "title": "Initial TC Skill Implementation",
+      "status": "tested",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-04-03T16:00:00-04:00",
+      "updated": "2026-04-03T16:00:00-04:00",
+      "path": "records/TC-001-04-03-26-initial-skill-implementation",
+      "sub_tc_count": 5,
+      "test_summary": { "total": 4, "pass": 4, "fail": 0, "pending": 0, "skip": 0, "blocked": 0 }
+    }
+  ],
+  "statistics": {
+    "total": 1,
+    "by_status": { "planned": 0, "in_progress": 0, "blocked": 0, "implemented": 0, "tested": 1, "deployed": 0 },
+    "by_scope": { "feature": 1, "bugfix": 0, "refactor": 0, "infrastructure": 0, "documentation": 0, "hotfix": 0, "enhancement": 0 },
+    "by_priority": { "critical": 0, "high": 1, "medium": 0, "low": 0 }
+  }
+}
