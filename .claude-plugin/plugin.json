@@ -1,0 +1,35 @@
+{
+  "name": "technical-change-skill",
+  "version": "1.0.0",
+  "description": "Track code changes with structured JSON records and accessible HTML output. Enables AI session continuity — when a bot session expires, the next one picks up exactly where it left off.",
+  "author": "Elkidogz",
+  "repository": "https://github.com/Elkidogz/technical-change-skill",
+  "license": "MIT",
+  "keywords": [
+    "change-tracking",
+    "session-handoff",
+    "documentation",
+    "accessibility",
+    "json-schema",
+    "state-machine",
+    "developer-tools"
+  ],
+  "skills": [
+    {
+      "name": "tc",
+      "path": "SKILL.md",
+      "description": "Technical Change tracker with 8 commands: init, create, update, status, resume, close, export, dashboard"
+    }
+  ],
+  "tools": [
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "Bash"
+  ],
+  "requirements": {
+    "python": ">=3.10"
+  }
+}
