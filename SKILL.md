@@ -233,6 +233,51 @@ Regenerate just the dashboard index.html.
 1. Run the dashboard generator on tc_registry.json
 2. Report path to generated index.html
 
+### /tc retro <retro_changelog.json>
+Retroactively create TC records in bulk from a structured changelog file.
+Use this when onboarding an existing project with extensive undocumented history.
+
+**Steps:**
+1. Read the retro_changelog.json file (must match `schemas/tc_retro_changelog.schema.json`)
+2. Validate the changelog structure
+3. Run the batch generator:
+   ```bash
+   python "{skills_library_path}/generators/generate_retro_tcs.py" "<retro_changelog.json>" "docs/TC"
+   ```
+4. The generator will:
+   - Create a TC record for each entry (TC-001 through TC-NNN)
+   - Validate every record against the schema
+   - Generate HTML for every record
+   - Update the registry with all entries
+   - Regenerate the dashboard
+5. Report: total created, any errors, link to dashboard
+
+**Retro Changelog Format** (`retro_changelog.json`):
+```json
+{
+  "project": "Project Name",
+  "default_author": "retroactive",
+  "changes": [
+    {
+      "title": "Feature or Change Title",
+      "scope": "feature|bugfix|refactor|infrastructure|documentation|hotfix|enhancement",
+      "priority": "critical|high|medium|low",
+      "status": "deployed",
+      "date": "YYYY-MM-DD",
+      "description": "What changed and why (10+ chars)",
+      "motivation": "Why this change was needed (optional)",
+      "files": ["path/to/file.py", "path/to/other.py"],
+      "tags": ["tag1", "tag2"],
+      "version": "v1.0.0"
+    }
+  ]
+}
+```
+
+**Building the changelog**: Claude should analyze the project's git history, docs, changelogs,
+README, and code to build the retro_changelog.json. Group related changes into single TCs.
+Each TC should represent one logical unit of work (a feature, a fix, a refactor).
+
 ---
 
 ## Auto-Detection Rules
@@ -289,6 +334,9 @@ python "validators/validate_tc.py" "<path_to_tc_record.json>"
 
 # Validate the registry
 python "validators/validate_tc.py" --registry "<path_to_tc_registry.json>"
+
+# Retroactive batch creation
+python "generators/generate_retro_tcs.py" "<retro_changelog.json>" "<docs/TC/>"
 ```
 
 All generators use Python stdlib only — no external dependencies.
