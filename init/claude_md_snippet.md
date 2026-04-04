@@ -1,6 +1,6 @@
 ## Technical Change (TC) Tracking (MANDATORY)
 
-All code changes in this project MUST be tracked using the TC (Technical Change) system.
+All code changes in this project are tracked using the TC (Technical Change) system.
 TC records live at `docs/TC/` and are the system of record for what changed, why, and by whom.
 
 ### Session Start Protocol (MANDATORY)
@@ -11,17 +11,25 @@ On EVERY new session:
 4. Ask the user: "Resume TC-NNN? (y/n)"
 5. If resuming: update session_context with new session info, continue from handoff next_steps
 
-### Auto-Tracking Rules (MANDATORY)
-After EVERY code change (file create/modify/delete):
-1. Read `docs/TC/tc_registry.json` — find any `in_progress` TCs
-2. If an active TC exists:
-   - Add/update the file in `files_affected` (path, action, description)
-   - Update `session_context.current_session.last_active`
-   - Append a lightweight revision entry to `revision_history`
-   - If `auto_regenerate_html` is true in tc_config.json: regenerate the TC's HTML
-3. If NO active TC exists:
-   - Prompt: "This change to {filename} isn't tracked by a TC. Create one? (/tc create)"
-   - If user declines repeatedly, respect that for the session
+### Tracking Rules — Non-Blocking Subagent Pattern
+TC tracking MUST NOT interrupt the main workflow. Follow these rules:
+
+**During work: NEVER stop to update TC records inline.** Focus entirely on the task.
+
+**At natural milestones** (feature complete, test passing, logical stopping point, or when asked):
+- Spawn a **background Agent** to handle TC bookkeeping
+- The background agent reads what files were changed, updates the active TC record
+  (files_affected, revision_history, session_context), and regenerates HTML
+- The main agent continues working without waiting
+
+**Only surface a question when genuinely needed:**
+- "This work doesn't match any active TC — should I create one?" (ask once, not per file)
+- "TC-NNN looks complete — transition to implemented?" (suggest at milestones, don't nag)
+
+**At session end or before a long pause:**
+- Spawn a final background Agent to write the handoff summary (progress, next steps,
+  blockers, key context, files in progress, decisions made)
+- This is the critical data the next session needs
 
 ### TC Commands
 - `/tc init` — Initialize TC tracking in this project (already done)
@@ -32,6 +40,7 @@ After EVERY code change (file create/modify/delete):
 - `/tc close <tc-id>` — Transition TC to deployed + final approval
 - `/tc export` — Regenerate all HTML files from JSON records
 - `/tc dashboard` — Regenerate the dashboard index.html
+- `/tc retro <changelog.json>` — Batch-create TCs from project history
 
 ### HTML Generation
 After TC record changes, regenerate HTML:

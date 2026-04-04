@@ -1,14 +1,9 @@
 ---
 name: tc
-description: Track code changes with structured TC records (JSON + accessible HTML) for AI session continuity and cross-project change documentation
+description: |
+  Technical Change tracking skill. Use when user says /tc, /tc init, /tc create, /tc update, /tc status, /tc resume, /tc close, /tc export, /tc dashboard, or /tc retro. Also auto-runs at session start to check for TC initialization and active TCs. Tracks code changes with structured JSON records and accessible HTML output for AI session continuity.
 user-invocable: true
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-  - Bash
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # /tc — Technical Change Tracker
@@ -280,27 +275,39 @@ Each TC should represent one logical unit of work (a feature, a fix, a refactor)
 
 ---
 
-## Auto-Detection Rules
+## Auto-Detection Rules — Non-Blocking Subagent Pattern
 
-When `auto_track` is true in tc_config.json, the following rules apply automatically
-(enforced via CLAUDE.md integration, not background processes):
+TC tracking MUST NOT interrupt the main workflow. Use background subagents for all bookkeeping.
 
-### After Every File Modification
-1. Read `docs/TC/tc_registry.json`
-2. Find any records with status `in_progress`
-3. If active TC exists: add/update the modified file in its `files_affected`, update session timestamps, append lightweight revision
-4. If no active TC: prompt user to create one
+### During Work
+- **NEVER stop to update TC records inline.** Focus entirely on the task.
+- Do not read/write TC files between code changes.
+- The main agent's job is to code, not to do paperwork.
+
+### At Natural Milestones
+When a logical unit of work is complete (feature done, test passing, stopping point):
+- Spawn a **background Agent** (run_in_background=true) with this prompt:
+  "Read docs/TC/tc_registry.json. Find the in_progress TC. Read its tc_record.json. Update files_affected with [list files changed]. Append a revision entry summarizing what was done. Update session_context.current_session.last_active. Write the updated record. Regenerate the TC HTML and dashboard."
+- The main agent continues working without waiting.
+
+### Only Surface Questions When Genuinely Needed
+- "This work doesn't match any active TC — should I create one?" (ask once per session, not per file)
+- "TC-NNN looks complete — transition to implemented?" (at milestones only, don't nag)
+- Never interrupt the user for routine TC bookkeeping.
+
+### At Session End
+Before the session closes, spawn a final background Agent to write the handoff summary:
+- progress_summary: what was accomplished
+- next_steps: what still needs doing
+- blockers: anything preventing progress
+- key_context: important decisions, gotchas, patterns the next bot needs
+- files_in_progress: which files are mid-edit
 
 ### On Session Start
 1. Check if `docs/TC/` exists in the project
 2. If yes: read tc_registry.json, find in_progress/blocked TCs
 3. Display handoff summary for any active TCs
 4. Ask user if they want to resume
-
-### Status Transition Suggestions
-- When all files appear complete: suggest transitioning to `implemented`
-- When all test cases pass: suggest transitioning to `tested`
-- These are suggestions only — user must confirm
 
 ---
 
