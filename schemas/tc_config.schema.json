@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tc_config.schema.json",
+  "title": "TC Config",
+  "description": "Project-specific configuration for TC tracking. Created by /tc init.",
+  "type": "object",
+  "required": [
+    "project_name",
+    "tc_root",
+    "created",
+    "skills_library_path",
+    "auto_track",
+    "auto_regenerate_html",
+    "auto_regenerate_dashboard",
+    "default_author"
+  ],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the project"
+    },
+    "tc_root": {
+      "type": "string",
+      "default": "docs/TC",
+      "description": "Path to TC directory relative to project root"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when TC tracking was initialized"
+    },
+    "skills_library_path": {
+      "type": "string",
+      "description": "Absolute path to the skills_library/TC directory"
+    },
+    "auto_track": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, Claude will prompt for TC tracking on untracked code changes"
+    },
+    "auto_regenerate_html": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, regenerate tc_record.html after every TC update"
+    },
+    "auto_regenerate_dashboard": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, regenerate index.html after TC creation/status changes"
+    },
+    "default_author": {
+      "type": "string",
+      "default": "Claude",
+      "description": "Default author name for AI-created entries"
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["feature", "bugfix", "refactor", "infrastructure", "documentation", "hotfix", "enhancement"],
+      "description": "Available scope categories (customizable per project)"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,70 @@
+{
+  "project_name": "Cards_bot",
+  "created": "2026-04-03T10:00:00-04:00",
+  "updated": "2026-04-03T14:30:00-04:00",
+  "next_tc_number": 4,
+  "records": [
+    {
+      "tc_id": "TC-001-04-03-26-user-authentication",
+      "title": "User Authentication System",
+      "status": "in_progress",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-04-03T10:00:00-04:00",
+      "updated": "2026-04-03T14:30:00-04:00",
+      "path": "records/TC-001-04-03-26-user-authentication",
+      "sub_tc_count": 2,
+      "test_summary": { "total": 2, "pass": 1, "fail": 0, "pending": 1, "skip": 0, "blocked": 0 }
+    },
+    {
+      "tc_id": "TC-002-04-03-26-card-render-fix",
+      "title": "Fix Card Back Rendering Overflow",
+      "status": "tested",
+      "scope": "bugfix",
+      "priority": "medium",
+      "created": "2026-04-03T09:00:00-04:00",
+      "updated": "2026-04-03T13:00:00-04:00",
+      "path": "records/TC-002-04-03-26-card-render-fix",
+      "sub_tc_count": 0,
+      "test_summary": { "total": 3, "pass": 3, "fail": 0, "pending": 0, "skip": 0, "blocked": 0 }
+    },
+    {
+      "tc_id": "TC-003-04-02-26-battle-refactor",
+      "title": "Refactor Battle Engine State Machine",
+      "status": "planned",
+      "scope": "refactor",
+      "priority": "low",
+      "created": "2026-04-02T16:00:00-04:00",
+      "updated": "2026-04-02T16:00:00-04:00",
+      "path": "records/TC-003-04-02-26-battle-refactor",
+      "sub_tc_count": 0,
+      "test_summary": { "total": 0, "pass": 0, "fail": 0, "pending": 0, "skip": 0, "blocked": 0 }
+    }
+  ],
+  "statistics": {
+    "total": 3,
+    "by_status": {
+      "planned": 1,
+      "in_progress": 1,
+      "blocked": 0,
+      "implemented": 0,
+      "tested": 1,
+      "deployed": 0
+    },
+    "by_scope": {
+      "feature": 1,
+      "bugfix": 1,
+      "refactor": 1,
+      "infrastructure": 0,
+      "documentation": 0,
+      "hotfix": 0,
+      "enhancement": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 1,
+      "medium": 1,
+      "low": 1
+    }
+  }
+}

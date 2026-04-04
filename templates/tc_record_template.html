@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TC_ID}} — {{TITLE}}</title>
+  <!-- CSS is inlined by the generator for file:// compatibility -->
+  <style>{{CSS}}</style>
+</head>
+<body>
+  <!-- Skip link for keyboard navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="container">
+    <!-- Back to dashboard -->
+    <a href="../index.html" class="back-link" aria-label="Back to TC Dashboard">Back to Dashboard</a>
+
+    <!-- Header -->
+    <header class="tc-header" aria-label="TC Record Header">
+      <h1>{{TC_ID}}</h1>
+      <div class="subtitle">
+        <span>{{TITLE}}</span>
+        <span aria-hidden="true">&bull;</span>
+        <span>{{PROJECT}}</span>
+        <span role="status" class="badge badge-{{STATUS}}">{{STATUS_DISPLAY}}</span>
+        <span class="badge badge-{{SCOPE}}">{{SCOPE}}</span>
+        <span class="badge badge-{{PRIORITY}}">{{PRIORITY}}</span>
+      </div>
+    </header>
+
+    <!-- Section Navigation -->
+    <nav class="section-nav" aria-label="Page sections">
+      <a href="#overview">Overview</a>
+      <a href="#files">Files Affected</a>
+      <a href="#revisions">Revision History</a>
+      <a href="#sub-tcs">Sub-TCs</a>
+      <a href="#tests">Test Cases</a>
+      <a href="#session">Session Context</a>
+      <a href="#approval">Approval</a>
+    </nav>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" aria-label="TC Statistics">
+      {{STATS_GRID}}
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+
+      <!-- Overview Section -->
+      <section id="overview" aria-label="Overview">
+        <h2>Overview</h2>
+        {{OVERVIEW_CONTENT}}
+      </section>
+
+      <!-- Files Affected Section -->
+      <section id="files" aria-label="Files Affected">
+        <h2>Files Affected</h2>
+        {{FILES_CONTENT}}
+      </section>
+
+      <!-- Revision History Section -->
+      <section id="revisions" aria-label="Revision History">
+        <h2>Revision History</h2>
+        {{REVISIONS_CONTENT}}
+      </section>
+
+      <!-- Sub-TCs Section -->
+      <section id="sub-tcs" aria-label="Sub-TCs">
+        <h2>Sub-TCs</h2>
+        {{SUB_TCS_CONTENT}}
+      </section>
+
+      <!-- Test Cases Section -->
+      <section id="tests" aria-label="Test Cases">
+        <h2>Test Cases</h2>
+        {{TESTS_CONTENT}}
+      </section>
+
+      <!-- Session Context Section -->
+      <section id="session" aria-label="Session Context">
+        <h2>Session Context</h2>
+        {{SESSION_CONTENT}}
+      </section>
+
+      <!-- Approval Section -->
+      <section id="approval" aria-label="Approval">
+        <h2>Approval</h2>
+        {{APPROVAL_CONTENT}}
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="tc-footer">
+      <p>Generated on {{GENERATED_DATE}} &bull; TC Skill v1.0.0</p>
+    </footer>
+  </div>
+</body>
+</html>

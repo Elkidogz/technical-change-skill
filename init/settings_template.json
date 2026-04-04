@@ -1,0 +1,10 @@
+{
+  "_comment": "TC Skill permissions — merge into .claude/settings.local.json",
+  "permissions": {
+    "allow": [
+      "Bash(python \"{skills_library_path}/generators/generate_tc_html.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/generate_dashboard.py\":*)",
+      "Bash(python \"{skills_library_path}/validators/validate_tc.py\":*)"
+    ]
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "tc_id": "TC-001-04-03-26-user-authentication",
+  "parent_tc": null,
+  "title": "User Authentication System",
+  "status": "in_progress",
+  "priority": "high",
+  "created": "2026-04-03T10:00:00-04:00",
+  "updated": "2026-04-03T14:30:00-04:00",
+  "created_by": "ai:claude-opus-session-abc123",
+  "project": "Cards_bot",
+  "description": {
+    "summary": "Implement user authentication with Discord OAuth2 for the web companion site",
+    "motivation": "Users need to log into the web companion to view their card collections and manage their profiles securely",
+    "scope": "feature",
+    "detailed_design": "Use Discord OAuth2 flow with Flask-Login for session management. Store session tokens in SQLite with expiry. Add middleware to protect authenticated routes.",
+    "breaking_changes": [
+      "All /web/* routes now require authentication except /web/login and /web/public/*"
+    ],
+    "dependencies": [
+      "Flask-Login>=0.6.0",
+      "requests-oauthlib>=1.3.0"
+    ]
+  },
+  "files_affected": [
+    {
+      "path": "services/auth_service.py",
+      "action": "created",
+      "description": "New authentication service with OAuth2 flow, token management, and session handling",
+      "lines_added": 245,
+      "lines_removed": 0
+    },
+    {
+      "path": "web/routes.py",
+      "action": "modified",
+      "description": "Added login/logout routes and auth middleware to existing web routes",
+      "lines_added": 87,
+      "lines_removed": 12
+    },
+    {
+      "path": "database/schema.sql",
+      "action": "modified",
+      "description": "Added user_sessions table for storing OAuth tokens",
+      "lines_added": 15,
+      "lines_removed": 0
+    },
+    {
+      "path": "templates/login.html",
+      "action": "created",
+      "description": "Login page with Discord OAuth button",
+      "lines_added": 42,
+      "lines_removed": 0
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-03T10:00:00-04:00",
+      "author": "ai:claude-opus-session-abc123",
+      "summary": "TC created — User Authentication System for web companion site",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "Initial TC creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-04-03T10:15:00-04:00",
+      "author": "ai:claude-opus-session-abc123",
+      "summary": "Started implementation — created auth_service.py scaffold",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Beginning implementation of OAuth2 service"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": "services/auth_service.py",
+          "reason": "New file for authentication service"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-04-03T14:30:00-04:00",
+      "author": "ai:claude-opus-session-def456",
+      "summary": "Session 2: Added login routes and database schema, test case T1 passing",
+      "field_changes": [
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": "web/routes.py, database/schema.sql, templates/login.html",
+          "reason": "Additional files modified during implementation"
+        },
+        {
+          "field": "test_cases[0].status",
+          "action": "changed",
+          "old_value": "pending",
+          "new_value": "pass",
+          "reason": "OAuth callback endpoint verified working"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [
+    {
+      "sub_id": "TC-001.A",
+      "title": "OAuth2 Service Layer",
+      "status": "implemented",
+      "description": "Core OAuth2 flow with Discord API, token exchange, and refresh logic",
+      "files_affected": ["services/auth_service.py"],
+      "revision_history": [
+        {
+          "revision_id": "R1",
+          "timestamp": "2026-04-03T10:15:00-04:00",
+          "author": "ai:claude-opus-session-abc123",
+          "summary": "Implemented OAuth2 service with token exchange"
+        }
+      ]
+    },
+    {
+      "sub_id": "TC-001.B",
+      "title": "Web Route Authentication Middleware",
+      "status": "in_progress",
+      "description": "Flask middleware to protect authenticated routes and handle session validation",
+      "files_affected": ["web/routes.py"],
+      "revision_history": [
+        {
+          "revision_id": "R1",
+          "timestamp": "2026-04-03T14:00:00-04:00",
+          "author": "ai:claude-opus-session-def456",
+          "summary": "Added login/logout routes, middleware in progress"
+        }
+      ]
+    }
+  ],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "OAuth2 callback processes authorization code correctly",
+      "procedure": [
+        "Navigate to /web/login and click 'Login with Discord'",
+        "Complete Discord OAuth2 authorization",
+        "Verify redirect back to /web/callback with authorization code",
+        "Verify user session is created in database",
+        "Verify redirect to /web/dashboard with authenticated session"
+      ],
+      "expected_result": "User is authenticated, session token stored in SQLite, redirected to dashboard",
+      "actual_result": "OAuth callback processed successfully, session created with 24h expiry, dashboard loaded with user data",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "log_snippet",
+          "description": "Auth service log showing successful token exchange",
+          "content": "[2026-04-03 14:25:33] INFO auth_service: OAuth2 token exchange successful for user#1234\n[2026-04-03 14:25:33] INFO auth_service: Session created: sid=a1b2c3, expires=2026-04-04T14:25:33\n[2026-04-03 14:25:33] INFO web.routes: Redirecting authenticated user to /web/dashboard",
+          "timestamp": "2026-04-03T14:25:33-04:00"
+        },
+        {
+          "type": "command_output",
+          "description": "Database query confirming session record",
+          "content": "sqlite3 data/bot.db \"SELECT sid, user_id, expires_at FROM user_sessions ORDER BY created_at DESC LIMIT 1;\"\na1b2c3|1234|2026-04-04 14:25:33"
+        }
+      ],
+      "tested_by": "ai:claude-opus-session-def456",
+      "tested_date": "2026-04-03T14:25:33-04:00"
+    },
+    {
+      "test_id": "T2",
+      "title": "Unauthenticated access to protected routes redirects to login",
+      "procedure": [
+        "Clear all cookies/sessions",
+        "Navigate directly to /web/dashboard (protected route)",
+        "Verify redirect to /web/login with return_url parameter",
+        "Verify no session data is exposed"
+      ],
+      "expected_result": "302 redirect to /web/login?return_url=/web/dashboard with no session leakage",
+      "actual_result": null,
+      "status": "pending",
+      "evidence": [],
+      "tested_by": null,
+      "tested_date": null
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "partial"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "claude-session-def456",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6",
+      "started": "2026-04-03T13:00:00-04:00",
+      "last_active": "2026-04-03T14:30:00-04:00"
+    },
+    "handoff": {
+      "progress_summary": "OAuth2 service layer complete and tested. Login/logout routes added. Middleware for route protection is partially implemented — decorator function exists but not yet applied to all routes.",
+      "next_steps": [
+        "Apply @require_auth decorator to all /web/* routes except /login, /callback, /public/*",
+        "Implement session refresh logic (auto-refresh if token expires within 1 hour)",
+        "Add logout endpoint that clears session from SQLite",
+        "Run T2 test case (unauthenticated access redirect)",
+        "Update web/templates to show logged-in user info in header"
+      ],
+      "blockers": [
+        "Need Discord application Client ID and Secret in .env (user must provide)"
+      ],
+      "key_context": [
+        "Using Flask-Login for session management, NOT raw cookies",
+        "Sessions stored in SQLite user_sessions table with 24h expiry",
+        "OAuth2 scopes: identify, email, guilds (for future guild-based permissions)",
+        "All auth routes under /web/ prefix, bot commands unaffected"
+      ],
+      "files_in_progress": [
+        {
+          "path": "web/routes.py",
+          "state": "partially_done",
+          "notes": "@require_auth decorator defined but only applied to /dashboard and /profile so far"
+        },
+        {
+          "path": "services/auth_service.py",
+          "state": "ready",
+          "notes": "Complete and tested — OAuth2 flow, token exchange, session CRUD"
+        }
+      ],
+      "decisions_made": [
+        {
+          "decision": "Use SQLite for session storage instead of Redis",
+          "rationale": "Project already uses SQLite for all data. Adding Redis would be a new dependency for a single-server bot. If scaling is needed later, sessions can be migrated.",
+          "timestamp": "2026-04-03T10:05:00-04:00"
+        },
+        {
+          "decision": "24-hour session expiry with auto-refresh",
+          "rationale": "Balances security with UX. Users won't need to re-auth daily for active sessions, but inactive sessions expire within a day.",
+          "timestamp": "2026-04-03T10:10:00-04:00"
+        }
+      ]
+    },
+    "session_history": [
+      {
+        "session_id": "claude-session-abc123",
+        "platform": "claude_code",
+        "model": "claude-opus-4-6",
+        "started": "2026-04-03T10:00:00-04:00",
+        "ended": "2026-04-03T12:30:00-04:00",
+        "summary": "Created TC, designed auth architecture, implemented OAuth2 service layer (services/auth_service.py). Made key decisions on session storage (SQLite) and expiry (24h).",
+        "changes_made": [
+          "Created services/auth_service.py with OAuth2 flow",
+          "Designed database schema for user_sessions table",
+          "Made architectural decisions: SQLite sessions, 24h expiry"
+        ]
+      }
+    ]
+  },
+  "tags": ["authentication", "oauth2", "web", "security"],
+  "related_tcs": [],
+  "notes": "This TC is part of the web companion site feature set. Future TCs for profile management and guild-based permissions will depend on this authentication system.",
+  "metadata": {
+    "project": "Cards_bot",
+    "created_by": "ai:claude-opus-session-abc123",
+    "last_modified_by": "ai:claude-opus-session-def456",
+    "last_modified": "2026-04-03T14:30:00-04:00",
+    "estimated_effort": "medium"
+  }
+}

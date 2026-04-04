@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Claude Code local config (not the launch.json)
+.claude/settings.local.json
+
+# Generated example HTML (regenerated from JSON)
+examples/example_tc_record.html
+examples/example_dashboard.html

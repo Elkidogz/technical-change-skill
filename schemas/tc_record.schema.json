@@ -1,0 +1,565 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tc_record.schema.json",
+  "title": "TC Record",
+  "description": "Technical Change record for tracking code changes with revision history, test cases, and AI session handoff data",
+  "type": "object",
+  "required": [
+    "tc_id",
+    "title",
+    "status",
+    "priority",
+    "created",
+    "updated",
+    "created_by",
+    "project",
+    "description",
+    "files_affected",
+    "revision_history",
+    "test_cases",
+    "approval",
+    "session_context",
+    "tags",
+    "related_tcs",
+    "notes",
+    "metadata"
+  ],
+  "properties": {
+    "tc_id": {
+      "type": "string",
+      "pattern": "^TC-\\d{3}-\\d{2}-\\d{2}-\\d{2}-[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "TC identifier: TC-NNN-MM-DD-YY-functionality-slug"
+    },
+    "parent_tc": {
+      "type": ["string", "null"],
+      "pattern": "^TC-\\d{3}",
+      "default": null,
+      "description": "Parent TC ID for sub-TCs, null for top-level TCs"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 120,
+      "description": "Human-readable title for the technical change"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+      "description": "Current implementation state"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "default": "medium",
+      "description": "Priority level for the technical change"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 creation timestamp with timezone offset"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 last-updated timestamp with timezone offset"
+    },
+    "created_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human name or AI bot identifier (e.g., 'user:micha' or 'ai:claude-opus-session-abc123')"
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Project name this TC belongs to"
+    },
+    "description": {
+      "type": "object",
+      "required": ["summary", "motivation", "scope"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Concise summary of what this TC covers"
+        },
+        "motivation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this change is needed"
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["feature", "bugfix", "refactor", "infrastructure", "documentation", "hotfix", "enhancement"],
+          "description": "Category/type of change"
+        },
+        "detailed_design": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Optional detailed design notes or approach description"
+        },
+        "breaking_changes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "List of breaking changes introduced by this TC"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "External dependencies or prerequisites"
+        }
+      },
+      "additionalProperties": false
+    },
+    "files_affected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "action"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path relative to project root (forward slashes)"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["created", "modified", "deleted", "renamed"],
+            "description": "What was done to this file"
+          },
+          "description": {
+            "type": ["string", "null"],
+            "default": null,
+            "description": "What was changed in this file"
+          },
+          "lines_added": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "default": null
+          },
+          "lines_removed": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "default": null
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": [],
+      "description": "Files affected by this technical change"
+    },
+    "revision_history": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["revision_id", "timestamp", "author", "summary"],
+        "properties": {
+          "revision_id": {
+            "type": "string",
+            "pattern": "^R\\d+$",
+            "description": "Sequential revision ID: R1, R2, R3..."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of this revision"
+          },
+          "author": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Who made this revision"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What changed in this revision"
+          },
+          "field_changes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["field", "action"],
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Dot-path to the changed field (e.g., 'status', 'description.summary')"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["set", "changed", "added", "removed"],
+                  "description": "Type of change"
+                },
+                "old_value": {
+                  "description": "Previous value (omitted for 'set' and 'added')"
+                },
+                "new_value": {
+                  "description": "New value (omitted for 'removed')"
+                },
+                "reason": {
+                  "type": ["string", "null"],
+                  "default": null,
+                  "description": "Why this change was made"
+                }
+              },
+              "additionalProperties": false
+            },
+            "default": [],
+            "description": "Detailed field-level changes in this revision"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Append-only revision history. First entry is always the creation event."
+    },
+    "sub_tcs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sub_id", "title", "status"],
+        "properties": {
+          "sub_id": {
+            "type": "string",
+            "pattern": "^TC-\\d{3}\\.[A-Z](\\.\\d+)?$",
+            "description": "Sub-TC identifier: TC-NNN.A or TC-NNN.A.1"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Sub-TC title"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+            "description": "Sub-TC implementation state"
+          },
+          "description": {
+            "type": ["string", "null"],
+            "default": null,
+            "description": "What this sub-TC covers"
+          },
+          "files_affected": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "File paths affected by this sub-TC"
+          },
+          "revision_history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["revision_id", "timestamp", "author", "summary"],
+              "properties": {
+                "revision_id": { "type": "string", "pattern": "^R\\d+$" },
+                "timestamp": { "type": "string", "format": "date-time" },
+                "author": { "type": "string" },
+                "summary": { "type": "string" },
+                "field_changes": { "type": "array", "default": [] }
+              },
+              "additionalProperties": false
+            },
+            "default": [],
+            "description": "Sub-TC revision history"
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": [],
+      "description": "Child TCs for sub-components of this feature"
+    },
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["test_id", "title", "procedure", "expected_result", "status"],
+        "properties": {
+          "test_id": {
+            "type": "string",
+            "pattern": "^T\\d+$",
+            "description": "Sequential test ID: T1, T2, T3..."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "description": "Test case title"
+          },
+          "procedure": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Step-by-step test procedure"
+          },
+          "expected_result": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What should happen when the test passes"
+          },
+          "actual_result": {
+            "type": ["string", "null"],
+            "default": null,
+            "description": "What actually happened during testing"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "pass", "fail", "skip", "blocked"],
+            "description": "Test execution status"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "description"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["log_snippet", "screenshot", "file_reference", "command_output"],
+                  "description": "Type of evidence"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "What this evidence shows"
+                },
+                "content": {
+                  "type": ["string", "null"],
+                  "default": null,
+                  "description": "Inline content (for log_snippet and command_output)"
+                },
+                "path": {
+                  "type": ["string", "null"],
+                  "default": null,
+                  "description": "File path relative to evidence directory (for screenshot and file_reference)"
+                },
+                "timestamp": {
+                  "type": ["string", "null"],
+                  "format": "date-time",
+                  "default": null,
+                  "description": "When this evidence was captured"
+                }
+              },
+              "additionalProperties": false
+            },
+            "default": [],
+            "description": "Evidence proving the test result"
+          },
+          "tested_by": {
+            "type": ["string", "null"],
+            "default": null,
+            "description": "Who executed the test"
+          },
+          "tested_date": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "default": null,
+            "description": "When the test was executed"
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": [],
+      "description": "Test cases with evidence for this TC"
+    },
+    "approval": {
+      "type": "object",
+      "required": ["approved", "test_coverage_status"],
+      "properties": {
+        "approved": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this TC has been approved"
+        },
+        "approved_by": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Who approved this TC"
+        },
+        "approved_date": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "default": null,
+          "description": "When this TC was approved"
+        },
+        "approval_notes": {
+          "type": "string",
+          "default": "",
+          "description": "Notes from the approver"
+        },
+        "test_coverage_status": {
+          "type": "string",
+          "enum": ["none", "partial", "full"],
+          "default": "none",
+          "description": "How much of the TC is covered by tests"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Approval status and details"
+    },
+    "session_context": {
+      "type": "object",
+      "required": ["current_session"],
+      "properties": {
+        "current_session": {
+          "type": "object",
+          "required": ["session_id", "platform", "model", "started"],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Unique session identifier"
+            },
+            "platform": {
+              "type": "string",
+              "enum": ["claude_code", "claude_web", "api", "other"],
+              "description": "AI platform being used"
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1,
+              "description": "AI model identifier"
+            },
+            "started": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When this session started"
+            },
+            "last_active": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "default": null,
+              "description": "When this session was last active"
+            }
+          },
+          "additionalProperties": false
+        },
+        "handoff": {
+          "type": "object",
+          "properties": {
+            "progress_summary": {
+              "type": "string",
+              "default": "",
+              "description": "What has been done so far"
+            },
+            "next_steps": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [],
+              "description": "What needs to be done next"
+            },
+            "blockers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [],
+              "description": "Current blockers preventing progress"
+            },
+            "key_context": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [],
+              "description": "Important context the next session needs to know"
+            },
+            "files_in_progress": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["path", "state"],
+                "properties": {
+                  "path": { "type": "string" },
+                  "state": {
+                    "type": "string",
+                    "enum": ["editing", "needs_review", "partially_done", "ready"]
+                  },
+                  "notes": {
+                    "type": ["string", "null"],
+                    "default": null
+                  }
+                },
+                "additionalProperties": false
+              },
+              "default": [],
+              "description": "Files currently being worked on"
+            },
+            "decisions_made": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["decision", "rationale", "timestamp"],
+                "properties": {
+                  "decision": { "type": "string" },
+                  "rationale": { "type": "string" },
+                  "timestamp": { "type": "string", "format": "date-time" }
+                },
+                "additionalProperties": false
+              },
+              "default": [],
+              "description": "Architectural decisions made during this TC"
+            }
+          },
+          "additionalProperties": false,
+          "default": {},
+          "description": "Handoff data for session continuity"
+        },
+        "session_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["session_id", "platform", "model", "started", "ended", "summary"],
+            "properties": {
+              "session_id": { "type": "string" },
+              "platform": { "type": "string" },
+              "model": { "type": "string" },
+              "started": { "type": "string", "format": "date-time" },
+              "ended": { "type": "string", "format": "date-time" },
+              "summary": { "type": "string" },
+              "changes_made": {
+                "type": "array",
+                "items": { "type": "string" },
+                "default": [],
+                "description": "List of changes made during this session"
+              }
+            },
+            "additionalProperties": false
+          },
+          "default": [],
+          "description": "History of all sessions that worked on this TC"
+        }
+      },
+      "additionalProperties": false,
+      "description": "AI session tracking for bot continuity"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Freeform tags for categorization"
+    },
+    "related_tcs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "IDs of related TC records"
+    },
+    "notes": {
+      "type": "string",
+      "default": "",
+      "description": "Freeform notes"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["project", "created_by", "last_modified_by", "last_modified"],
+      "properties": {
+        "project": { "type": "string" },
+        "created_by": { "type": "string" },
+        "last_modified_by": { "type": "string" },
+        "last_modified": { "type": "string", "format": "date-time" },
+        "estimated_effort": {
+          "type": ["string", "null"],
+          "enum": ["trivial", "small", "medium", "large", "epic", null],
+          "default": null,
+          "description": "Estimated implementation effort"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Record metadata"
+    }
+  },
+  "additionalProperties": false
+}

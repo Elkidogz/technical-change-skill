@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PROJECT}} — TC Dashboard</title>
+  <!-- CSS is inlined by the generator for file:// compatibility -->
+  <style>{{CSS}}</style>
+</head>
+<body>
+  <!-- Skip link for keyboard navigation -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="tc-header" aria-label="Dashboard Header">
+      <h1>{{PROJECT}} — Technical Changes</h1>
+      <div class="subtitle">
+        <span>{{TOTAL_TCS}} Technical Changes</span>
+        <span aria-hidden="true">&bull;</span>
+        <span>Last updated: {{LAST_UPDATED}}</span>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+      <!-- Stats Grid -->
+      <section aria-label="Status Overview">
+        <h2>Status Overview</h2>
+        <div class="stats-grid">
+          {{STATUS_STATS}}
+        </div>
+      </section>
+
+      <!-- Status Distribution Bar -->
+      <section aria-label="Status Distribution">
+        <h2>Distribution</h2>
+        <div class="status-bar" role="img" aria-label="{{STATUS_BAR_ARIA}}">
+          {{STATUS_BAR}}
+        </div>
+      </section>
+
+      <!-- Filter Bar + TC List (wrapped for CSS-only filtering) -->
+      <section aria-label="Technical Changes List">
+        <h2>All Technical Changes</h2>
+        <p style="font-size: var(--font-sm); color: var(--dim); margin-bottom: var(--space-md);">
+          Use Ctrl+F (Cmd+F) for text search. Click a status filter below to narrow results.
+        </p>
+
+        <!-- CSS-only filter radios - these must be siblings of .tc-list -->
+        {{FILTER_RADIOS}}
+
+        <div class="tc-list">
+          {{TC_CARDS}}
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section aria-label="Recent Activity">
+        <h2>Recent Activity</h2>
+        <div class="card">
+          {{ACTIVITY_FEED}}
+        </div>
+      </section>
+
+      <!-- Scope Breakdown -->
+      <section aria-label="Scope Breakdown">
+        <h2>Scope Breakdown</h2>
+        <div class="stats-grid">
+          {{SCOPE_STATS}}
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="tc-footer">
+      <p>Generated on {{GENERATED_DATE}} &bull; TC Skill v1.0.0</p>
+    </footer>
+  </div>
+</body>
+</html>
