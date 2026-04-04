@@ -17,6 +17,22 @@ Track every code change with structured JSON records and accessible HTML output.
 Ensures AI bot sessions can resume seamlessly when previous sessions expire or are abandoned.
 Designed for deployment across multiple projects.
 
+## First-Use Detection (MANDATORY — Every Session)
+
+At the start of EVERY session, before doing any work:
+
+1. Check if `docs/TC/tc_config.json` exists in the current working directory
+2. **If it EXISTS**: follow the Session Start Protocol in the `/tc resume` section
+3. **If it does NOT exist**: prompt the user:
+   > TC tracking is not initialized in this project. Would you like to set it up?
+   > This enables structured change tracking, AI session handoff, and HTML documentation.
+   > Run `/tc init` to get started.
+4. Wait for the user's response. If they agree, run `/tc init`.
+5. If the user declines, continue without TC tracking for this session.
+
+A global skill is installed at `~/.claude/skills/tc.md` to ensure this check runs
+in every project, even those that haven't been initialized yet.
+
 ## Overview
 
 Each Technical Change (TC) is a structured record that documents:

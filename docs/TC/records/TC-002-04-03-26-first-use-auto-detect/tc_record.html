@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>technical-change-skill — TC Dashboard</title>
+  <title>TC-002-04-03-26-first-use-auto-detect — First-Use Auto-Detection and Global Skill</title>
   <!-- CSS is inlined by the generator for file:// compatibility -->
   <style>/* ============================================================
    TC Styles — Accessible Dark Theme
@@ -871,95 +871,232 @@ tbody tr:hover {
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <div class="container">
+    <!-- Back to dashboard -->
+    <a href="../index.html" class="back-link" aria-label="Back to TC Dashboard">Back to Dashboard</a>
+
     <!-- Header -->
-    <header class="tc-header" aria-label="Dashboard Header">
-      <h1>technical-change-skill — Technical Changes</h1>
+    <header class="tc-header" aria-label="TC Record Header">
+      <h1>TC-002-04-03-26-first-use-auto-detect</h1>
       <div class="subtitle">
-        <span>2 Technical Changes</span>
+        <span>First-Use Auto-Detection and Global Skill</span>
         <span aria-hidden="true">&bull;</span>
-        <span>Last updated: 2026-04-03 22:17 Eastern Daylight Time</span>
+        <span>technical-change-skill</span>
+        <span role="status" class="badge badge-implemented">Implemented</span>
+        <span class="badge badge-enhancement">enhancement</span>
+        <span class="badge badge-high">high</span>
       </div>
     </header>
 
+    <!-- Section Navigation -->
+    <nav class="section-nav" aria-label="Page sections">
+      <a href="#overview">Overview</a>
+      <a href="#files">Files Affected</a>
+      <a href="#revisions">Revision History</a>
+      <a href="#sub-tcs">Sub-TCs</a>
+      <a href="#tests">Test Cases</a>
+      <a href="#session">Session Context</a>
+      <a href="#approval">Approval</a>
+    </nav>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" aria-label="TC Statistics">
+      <div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Files Affected</span></div>
+<div class="stat-card"><span class="stat-value">2/2</span><span class="stat-label">Tests Passing</span></div>
+<div class="stat-card"><span class="stat-value">2</span><span class="stat-label">Revisions</span></div>
+<div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Sessions</span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label">Sub-TCs</span></div>
+<div class="stat-card"><span class="stat-value">High</span><span class="stat-label">Priority</span></div>
+    </div>
+
+    <!-- Main Content -->
     <main id="main-content">
 
-      <!-- Stats Grid -->
-      <section aria-label="Status Overview">
-        <h2>Status Overview</h2>
-        <div class="stats-grid">
-          <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-planned">Planned</span></span></div>
-<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-in_progress">In Progress</span></span></div>
-<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-blocked">Blocked</span></span></div>
-<div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-implemented">Implemented</span></span></div>
-<div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-tested">Tested</span></span></div>
-<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-deployed">Deployed</span></span></div>
-        </div>
-      </section>
-
-      <!-- Status Distribution Bar -->
-      <section aria-label="Status Distribution">
-        <h2>Distribution</h2>
-        <div class="status-bar" role="img" aria-label="Implemented: 1 (50%), Tested: 1 (50%)">
-          <div class="status-bar-segment seg-implemented" style="flex-basis:50.0%" title="Implemented: 1 (50%)">1</div>
-<div class="status-bar-segment seg-tested" style="flex-basis:50.0%" title="Tested: 1 (50%)">1</div>
-        </div>
-      </section>
-
-      <!-- Filter Bar + TC List (wrapped for CSS-only filtering) -->
-      <section aria-label="Technical Changes List">
-        <h2>All Technical Changes</h2>
-        <p style="font-size: var(--font-sm); color: var(--dim); margin-bottom: var(--space-md);">
-          Use Ctrl+F (Cmd+F) for text search. Click a status filter below to narrow results.
-        </p>
-
-        <!-- CSS-only filter radios - these must be siblings of .tc-list -->
-        <div class="filter-bar">
-<input type="radio" name="filter" id="filter-all" checked>
-<label for="filter-all">All</label>
-<input type="radio" name="filter" id="filter-planned">
-<label for="filter-planned">Planned</label>
-<input type="radio" name="filter" id="filter-in_progress">
-<label for="filter-in_progress">In Progress</label>
-<input type="radio" name="filter" id="filter-blocked">
-<label for="filter-blocked">Blocked</label>
-<input type="radio" name="filter" id="filter-implemented">
-<label for="filter-implemented">Implemented</label>
-<input type="radio" name="filter" id="filter-tested">
-<label for="filter-tested">Tested</label>
-<input type="radio" name="filter" id="filter-deployed">
-<label for="filter-deployed">Deployed</label>
-</div>
-
-        <div class="tc-list">
-          <div class="tc-card" data-status="implemented"><a href="records/TC-002-04-03-26-first-use-auto-detect/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-002-04-03-26-first-use-auto-detect</div><div class="tc-card-title">First-Use Auto-Detection and Global Skill</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-enhancement">enhancement</span><span class="badge badge-high">high</span><span>Updated: 5h ago</span>
-<span>Tests: 2/2 pass</span>
-</div></a></div>
-<div class="tc-card" data-status="tested"><a href="records/TC-001-04-03-26-initial-skill-implementation/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-001-04-03-26-initial-skill-implementation</div><div class="tc-card-title">Initial TC Skill Implementation</div></div><span class="badge badge-tested">Tested</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 6h ago</span>
-<span>Tests: 4/4 pass</span>
-<span>Sub-TCs: 5</span>
-</div></a></div>
-        </div>
-      </section>
-
-      <!-- Recent Activity -->
-      <section aria-label="Recent Activity">
-        <h2>Recent Activity</h2>
+      <!-- Overview Section -->
+      <section id="overview" aria-label="Overview">
+        <h2>Overview</h2>
         <div class="card">
-          <div class="activity-item"><span class="activity-time">5h ago</span><span class="activity-text"><strong>TC-002-04-03-26-first-use-auto-detect</strong> R1: TC created — first-use auto-detection for new projects</span></div>
-<div class="activity-item"><span class="activity-time">5h ago</span><span class="activity-text"><strong>TC-002-04-03-26-first-use-auto-detect</strong> R2: Implemented: global skill at ~/.claude/skills/tc.md and updated SKILL.md with first-use detection section</span></div>
-<div class="activity-item"><span class="activity-time">6h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R1: TC created — documenting the full initial implementation of the TC skill across all 7 phases</span></div>
-<div class="activity-item"><span class="activity-time">6h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R2: All phases complete — schemas, validator, CSS, templates, generators, init templates, SKILL.md, examples all implemented and verified</span></div>
-<div class="activity-item"><span class="activity-time">6h ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R3: Validation and generation tests passed — example record validates, both HTML pages generated and opened in browser, published to GitHub</span></div>
-        </div>
+<h3>Summary</h3>
+<p>Add automatic first-use detection so the TC skill prompts for initialization in any new project without requiring manual invocation</p>
+</div>
+<div class="card">
+<h3>Motivation</h3>
+<p>User wants TC tracking to be truly zero-touch for new projects. Without this, users must remember to run /tc init manually. A global skill ensures every Claude Code session checks for TC tracking and offers setup.</p>
+</div>
+<div class="card">
+<h3>Detailed Design</h3>
+<p>Two-part implementation: (1) Global skill file at ~/.claude/skills/tc.md that loads in every Claude Code session and checks for docs/TC/tc_config.json on startup. If missing, prompts user to run /tc init. (2) Updated SKILL.md with a &#x27;First-Use Detection&#x27; section documenting this behavior.</p>
+</div>
+<div class="card">
+<h3>Metadata</h3>
+<div class="session-info">
+<div class="session-field"><div class="field-label">Created</div><div class="field-value">2026-04-03 17:15 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Updated</div><div class="field-value">2026-04-03 17:15 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Created By</div><div class="field-value">ai:claude-opus-4-6</div></div>
+<div class="session-field"><div class="field-label">Last Modified By</div><div class="field-value">ai:claude-opus-4-6</div></div>
+<div class="session-field"><div class="field-label">Effort</div><div class="field-value">Small</div></div>
+</div></div>
+<div class="card">
+<h3>Tags</h3>
+<div style="display:flex;flex-wrap:wrap;gap:var(--space-sm)">
+<span class="badge badge-enhancement">auto-detection</span>
+<span class="badge badge-enhancement">global-skill</span>
+<span class="badge badge-enhancement">onboarding</span>
+<span class="badge badge-enhancement">ux</span>
+</div></div>
+<div class="card">
+<h3>Related TCs</h3>
+<ul class="handoff-list">
+<li>TC-001-04-03-26-initial-skill-implementation</li>
+</ul></div>
+<div class="card">
+<h3>Notes</h3>
+<p>The global skill file (~/.claude/skills/tc.md) is installed on the user&#x27;s machine but not tracked in the git repo since it&#x27;s user-local configuration.</p>
+</div>
       </section>
 
-      <!-- Scope Breakdown -->
-      <section aria-label="Scope Breakdown">
-        <h2>Scope Breakdown</h2>
-        <div class="stats-grid">
-          <div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-feature">feature</span></span></div>
-<div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-enhancement">enhancement</span></span></div>
-        </div>
+      <!-- Files Affected Section -->
+      <section id="files" aria-label="Files Affected">
+        <h2>Files Affected</h2>
+        <div class="table-wrap"><table>
+<thead><tr>
+<th>File</th><th>Action</th><th>Description</th><th>+/-</th>
+</tr></thead><tbody>
+<tr><td><code>SKILL.md</code></td><td><span class="badge badge-refactor">modified</span></td><td>Added &#x27;First-Use Detection (MANDATORY)&#x27; section between header and Overview</td><td><span class="new-value">+15</span> / <span class="old-value">-0</span></td></tr>
+</tbody></table></div>
+      </section>
+
+      <!-- Revision History Section -->
+      <section id="revisions" aria-label="Revision History">
+        <h2>Revision History</h2>
+        <div class="timeline">
+<div class="timeline-item">
+<span class="revision-id">R2</span> <span class="revision-meta">2026-04-03 17:15 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">Implemented: global skill at ~/.claude/skills/tc.md and updated SKILL.md with first-use detection section</div>
+<div class="field-change">
+<span class="field-name">status</span> 
+<span class="old-value">planned</span> &rarr; <span class="new-value">implemented</span>
+<br><small style="color:var(--dim)">Reason: Global skill created and SKILL.md updated. External file ~/.claude/skills/tc.md not tracked in this repo but documented.</small>
+</div>
+<div class="field-change">
+<span class="field-name">files_affected</span> 
+<span class="new-value">+ SKILL.md</span>
+<br><small style="color:var(--dim)">Reason: Added first-use detection section</small>
+</div>
+</div>
+<div class="timeline-item">
+<span class="revision-id">R1</span> <span class="revision-meta">2026-04-03 17:15 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">TC created — first-use auto-detection for new projects</div>
+<div class="field-change">
+<span class="field-name">status</span> 
+set to <span class="new-value">planned</span>
+<br><small style="color:var(--dim)">Reason: User requested auto-detection for new projects</small>
+</div>
+</div>
+</div>
+      </section>
+
+      <!-- Sub-TCs Section -->
+      <section id="sub-tcs" aria-label="Sub-TCs">
+        <h2>Sub-TCs</h2>
+        <div class="empty-state"><p>No sub-TCs defined.</p></div>
+      </section>
+
+      <!-- Test Cases Section -->
+      <section id="tests" aria-label="Test Cases">
+        <h2>Test Cases</h2>
+        <div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T1</span> <span class="test-title">Global skill file exists and has correct trigger</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Check that ~/.claude/skills/tc.md exists</li>
+<li>Verify it contains &#x27;First-Use Detection&#x27; instructions</li>
+<li>Verify trigger includes &#x27;On session start (auto)&#x27;</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">File exists with auto-trigger and first-use detection logic</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">File created at C:/Users/micha/.claude/skills/tc.md with session start trigger and detection logic</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">file_reference</span> Global skill file location
+<p style="margin-top:var(--space-xs)"><code>C:/Users/micha/.claude/skills/tc.md</code></p>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-03 17:15 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T2</span> <span class="test-title">SKILL.md contains first-use detection section</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Read SKILL.md</li>
+<li>Verify &#x27;First-Use Detection (MANDATORY)&#x27; section exists</li>
+<li>Verify it includes the prompt text for uninitialized projects</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">SKILL.md has the section between header and Overview</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Section added successfully with 4-step detection flow and reference to global skill</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">file_reference</span> Updated SKILL.md
+<p style="margin-top:var(--space-xs)"><code>SKILL.md</code></p>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-03 17:15 UTC-04:00
+</div>
+</div>
+      </section>
+
+      <!-- Session Context Section -->
+      <section id="session" aria-label="Session Context">
+        <h2>Session Context</h2>
+        <h3>Current Session</h3>
+<div class="session-info">
+<div class="session-field"><div class="field-label">Session ID</div><div class="field-value">claude-opus-session-tc-build-001</div></div>
+<div class="session-field"><div class="field-label">Platform</div><div class="field-value">claude_code</div></div>
+<div class="session-field"><div class="field-label">Model</div><div class="field-value">claude-opus-4-6</div></div>
+<div class="session-field"><div class="field-label">Started</div><div class="field-value">2026-04-03 15:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Last Active</div><div class="field-value">2026-04-03 17:15 UTC-04:00</div></div>
+</div>
+<div class="handoff-section">
+<h3>Handoff Data</h3>
+<div class="result-label">Progress Summary</div>
+<p class="result-value">Global skill and SKILL.md update complete. User should test by opening Claude Code in a new, uninitialized directory to verify the prompt appears.</p>
+<div class="result-label">Next Steps</div>
+<ul class="handoff-list">
+<li>Test in a fresh directory to verify auto-detection prompt</li>
+<li>User approval to transition to tested/deployed</li>
+</ul>
+<div class="result-label">Key Context</div>
+<ul class="handoff-list">
+<li>Global skill at ~/.claude/skills/tc.md — loads in every Claude Code session</li>
+<li>SKILL.md updated with First-Use Detection section</li>
+</ul>
+<div class="result-label">Decisions Made</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<strong>Use global skill file rather than a hook</strong>
+<br><span style="color:var(--dim)">Skills are the Claude Code mechanism for auto-loading behavior. A global skill at ~/.claude/skills/ loads in every session regardless of project, which is exactly the behavior needed.</span>
+<br><small style="color:var(--dim)">2026-04-03 17:15 UTC-04:00</small>
+</div>
+</div>
+      </section>
+
+      <!-- Approval Section -->
+      <section id="approval" aria-label="Approval">
+        <h2>Approval</h2>
+        <div class="approval-status not-approved">
+<span style="font-size:var(--font-3xl)">&#10007;</span>
+<div>
+<strong style="font-size:var(--font-xl)">Not Yet Approved</strong>
+<br>Test Coverage: <span class="badge badge-full">FULL</span>
+</div></div>
       </section>
 
     </main>

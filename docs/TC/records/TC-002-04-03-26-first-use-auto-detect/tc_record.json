@@ -1,0 +1,141 @@
+{
+  "tc_id": "TC-002-04-03-26-first-use-auto-detect",
+  "parent_tc": null,
+  "title": "First-Use Auto-Detection and Global Skill",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-04-03T17:15:00-04:00",
+  "updated": "2026-04-03T17:15:00-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Add automatic first-use detection so the TC skill prompts for initialization in any new project without requiring manual invocation",
+    "motivation": "User wants TC tracking to be truly zero-touch for new projects. Without this, users must remember to run /tc init manually. A global skill ensures every Claude Code session checks for TC tracking and offers setup.",
+    "scope": "enhancement",
+    "detailed_design": "Two-part implementation: (1) Global skill file at ~/.claude/skills/tc.md that loads in every Claude Code session and checks for docs/TC/tc_config.json on startup. If missing, prompts user to run /tc init. (2) Updated SKILL.md with a 'First-Use Detection' section documenting this behavior.",
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "SKILL.md",
+      "action": "modified",
+      "description": "Added 'First-Use Detection (MANDATORY)' section between header and Overview",
+      "lines_added": 15,
+      "lines_removed": 0
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-03T17:15:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created — first-use auto-detection for new projects",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "User requested auto-detection for new projects" }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-04-03T17:15:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "Implemented: global skill at ~/.claude/skills/tc.md and updated SKILL.md with first-use detection section",
+      "field_changes": [
+        { "field": "status", "action": "changed", "old_value": "planned", "new_value": "implemented", "reason": "Global skill created and SKILL.md updated. External file ~/.claude/skills/tc.md not tracked in this repo but documented." },
+        { "field": "files_affected", "action": "added", "new_value": "SKILL.md", "reason": "Added first-use detection section" }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Global skill file exists and has correct trigger",
+      "procedure": [
+        "Check that ~/.claude/skills/tc.md exists",
+        "Verify it contains 'First-Use Detection' instructions",
+        "Verify trigger includes 'On session start (auto)'"
+      ],
+      "expected_result": "File exists with auto-trigger and first-use detection logic",
+      "actual_result": "File created at C:/Users/micha/.claude/skills/tc.md with session start trigger and detection logic",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "file_reference",
+          "description": "Global skill file location",
+          "path": "C:/Users/micha/.claude/skills/tc.md"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-03T17:15:00-04:00"
+    },
+    {
+      "test_id": "T2",
+      "title": "SKILL.md contains first-use detection section",
+      "procedure": [
+        "Read SKILL.md",
+        "Verify 'First-Use Detection (MANDATORY)' section exists",
+        "Verify it includes the prompt text for uninitialized projects"
+      ],
+      "expected_result": "SKILL.md has the section between header and Overview",
+      "actual_result": "Section added successfully with 4-step detection flow and reference to global skill",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "file_reference",
+          "description": "Updated SKILL.md",
+          "path": "SKILL.md"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-03T17:15:00-04:00"
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "full"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "claude-opus-session-tc-build-001",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6",
+      "started": "2026-04-03T15:00:00-04:00",
+      "last_active": "2026-04-03T17:15:00-04:00"
+    },
+    "handoff": {
+      "progress_summary": "Global skill and SKILL.md update complete. User should test by opening Claude Code in a new, uninitialized directory to verify the prompt appears.",
+      "next_steps": [
+        "Test in a fresh directory to verify auto-detection prompt",
+        "User approval to transition to tested/deployed"
+      ],
+      "blockers": [],
+      "key_context": [
+        "Global skill at ~/.claude/skills/tc.md — loads in every Claude Code session",
+        "SKILL.md updated with First-Use Detection section"
+      ],
+      "files_in_progress": [],
+      "decisions_made": [
+        {
+          "decision": "Use global skill file rather than a hook",
+          "rationale": "Skills are the Claude Code mechanism for auto-loading behavior. A global skill at ~/.claude/skills/ loads in every session regardless of project, which is exactly the behavior needed.",
+          "timestamp": "2026-04-03T17:15:00-04:00"
+        }
+      ]
+    },
+    "session_history": []
+  },
+  "tags": ["auto-detection", "global-skill", "onboarding", "ux"],
+  "related_tcs": ["TC-001-04-03-26-initial-skill-implementation"],
+  "notes": "The global skill file (~/.claude/skills/tc.md) is installed on the user's machine but not tracked in the git repo since it's user-local configuration.",
+  "metadata": {
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified_by": "ai:claude-opus-4-6",
+    "last_modified": "2026-04-03T17:15:00-04:00",
+    "estimated_effort": "small"
+  }
+}
