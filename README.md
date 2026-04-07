@@ -2,6 +2,10 @@
 
 A structured code change tracking system for [Claude Code](https://claude.ai/claude-code). Documents every code change with JSON records and accessible HTML output, enabling AI bot sessions to seamlessly resume work when previous sessions expire or are abandoned.
 
+![TC Dashboard — dark theme with status overview, filterable TC list, activity timeline, and scope breakdown](docs/TC/screenshots/dashboard.png)
+
+![Individual TC Record — full detail view with overview, revision history, session handoff, and approval status](docs/TC/screenshots/tc-record.png)
+
 ## What It Does
 
 - **Tracks every code change** with structured JSON records (what, why, who, when)
@@ -14,10 +18,46 @@ A structured code change tracking system for [Claude Code](https://claude.ai/cla
 
 ## Quick Start
 
-1. Clone this repo into your skills library
-2. In any project, run `/tc init` to set up TC tracking
-3. Use `/tc create <name>` to start tracking a change
-4. Changes are auto-tracked via CLAUDE.md mandatory rules
+### Claude Code (default)
+
+```bash
+# Clone and install as a skill
+git clone https://github.com/Elkidogz/technical-change-skill.git ~/.claude/skills/tc
+```
+
+Then in any project: `/tc init` to set up tracking, `/tc create <name>` to start.
+
+### Cursor
+
+```bash
+git clone https://github.com/Elkidogz/technical-change-skill.git .cursor/skills/tc
+```
+
+Invoke with `/tc` or `@tc` in Cursor's agent.
+
+### Codex CLI (OpenAI)
+
+```bash
+git clone https://github.com/Elkidogz/technical-change-skill.git .agents/skills/tc
+```
+
+Reference with `$tc` or via `/skills` listing.
+
+### Gemini CLI (Google)
+
+```bash
+git clone https://github.com/Elkidogz/technical-change-skill.git .gemini/skills/tc
+```
+
+Gemini auto-activates skills based on context — no manual trigger needed.
+
+### GitHub Copilot
+
+```bash
+git clone https://github.com/Elkidogz/technical-change-skill.git .github/skills/tc
+```
+
+Invoke with `/tc` or via `/skills` command.
 
 ## Commands
 
@@ -31,6 +71,7 @@ A structured code change tracking system for [Claude Code](https://claude.ai/cla
 | `/tc close <tc-id>` | Transition to deployed + final approval |
 | `/tc export` | Regenerate all HTML from JSON records |
 | `/tc dashboard` | Regenerate the dashboard index.html |
+| `/tc retro` | Bulk-create TCs from git history or changelog |
 
 ## TC Naming Convention
 

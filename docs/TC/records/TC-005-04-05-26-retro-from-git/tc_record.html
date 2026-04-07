@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TC-001-04-03-26-initial-skill-implementation — Initial TC Skill Implementation</title>
+  <title>TC-005-04-05-26-retro-from-git — /tc retro --from-git Auto-Mode</title>
   <!-- CSS is inlined by the generator for file:// compatibility -->
   <style>/* ============================================================
    TC Styles — Accessible Dark Theme
@@ -876,12 +876,12 @@ tbody tr:hover {
 
     <!-- Header -->
     <header class="tc-header" aria-label="TC Record Header">
-      <h1>TC-001-04-03-26-initial-skill-implementation</h1>
+      <h1>TC-005-04-05-26-retro-from-git</h1>
       <div class="subtitle">
-        <span>Initial TC Skill Implementation</span>
+        <span>/tc retro --from-git Auto-Mode</span>
         <span aria-hidden="true">&bull;</span>
         <span>technical-change-skill</span>
-        <span role="status" class="badge badge-tested">Tested</span>
+        <span role="status" class="badge badge-implemented">Implemented</span>
         <span class="badge badge-feature">feature</span>
         <span class="badge badge-high">high</span>
       </div>
@@ -900,11 +900,11 @@ tbody tr:hover {
 
     <!-- Stats Grid -->
     <div class="stats-grid" aria-label="TC Statistics">
-      <div class="stat-card"><span class="stat-value">16</span><span class="stat-label">Files Affected</span></div>
-<div class="stat-card"><span class="stat-value">4/4</span><span class="stat-label">Tests Passing</span></div>
-<div class="stat-card"><span class="stat-value">3</span><span class="stat-label">Revisions</span></div>
+      <div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Files Affected</span></div>
+<div class="stat-card"><span class="stat-value">0/0</span><span class="stat-label">Tests Passing</span></div>
+<div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Revisions</span></div>
 <div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Sessions</span></div>
-<div class="stat-card"><span class="stat-value">5</span><span class="stat-label">Sub-TCs</span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label">Sub-TCs</span></div>
 <div class="stat-card"><span class="stat-value">High</span><span class="stat-label">Priority</span></div>
     </div>
 
@@ -916,37 +916,38 @@ tbody tr:hover {
         <h2>Overview</h2>
         <div class="card">
 <h3>Summary</h3>
-<p>Complete implementation of the TC (Technical Change) skill for structured code change tracking with JSON records, accessible HTML output, and AI session handoff</p>
+<p>Add --from-git flag to /tc retro that auto-analyzes git log and generates retro_changelog.json without requiring manual JSON authoring</p>
 </div>
 <div class="card">
 <h3>Motivation</h3>
-<p>User manages 10+ projects and needs a universal, bulletproof change tracking system so that when an AI session expires or is abandoned, the next bot can seamlessly resume work. Also serves as human-readable documentation of all code changes.</p>
+<p>The current /tc retro requires users to manually write a retro_changelog.json file, which is tedious for projects with extensive history. Auto-generating from git log removes this friction and makes onboarding existing projects much faster. Originally specified in GitHub issue #1 but the --from-git mode was not implemented.</p>
 </div>
 <div class="card">
 <h3>Detailed Design</h3>
-<p>7-phase build: JSON schemas first, then Python validator with state machine, accessible CSS/HTML templates, Python generators (stdlib only), init templates for project onboarding, SKILL.md with 8 commands, and example data. Each generated HTML file is self-contained with inlined CSS for file:// compatibility.</p>
+<p>Python script that runs git log, parses commits, groups related commits into logical TCs by file overlap and timeframe, extracts metadata (files changed, dates, tags), and outputs a valid retro_changelog.json. Can be used standalone or piped into the existing retro generator.</p>
 </div>
+<div class="card">
+<h3>Dependencies</h3>
+<ul class="handoff-list">
+<li>git CLI available in PATH</li>
+</ul></div>
 <div class="card">
 <h3>Metadata</h3>
 <div class="session-info">
-<div class="session-field"><div class="field-label">Created</div><div class="field-value">2026-04-03 16:00 UTC-04:00</div></div>
-<div class="session-field"><div class="field-label">Updated</div><div class="field-value">2026-04-03 16:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Created</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Updated</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
 <div class="session-field"><div class="field-label">Created By</div><div class="field-value">ai:claude-opus-4-6</div></div>
 <div class="session-field"><div class="field-label">Last Modified By</div><div class="field-value">ai:claude-opus-4-6</div></div>
-<div class="session-field"><div class="field-label">Effort</div><div class="field-value">Large</div></div>
+<div class="session-field"><div class="field-label">Effort</div><div class="field-value">—</div></div>
 </div></div>
 <div class="card">
 <h3>Tags</h3>
 <div style="display:flex;flex-wrap:wrap;gap:var(--space-sm)">
-<span class="badge badge-enhancement">meta</span>
-<span class="badge badge-enhancement">dogfood</span>
-<span class="badge badge-enhancement">skill-infrastructure</span>
-<span class="badge badge-enhancement">v1.0.0</span>
+<span class="badge badge-enhancement">retro</span>
+<span class="badge badge-enhancement">git</span>
+<span class="badge badge-enhancement">automation</span>
+<span class="badge badge-enhancement">onboarding</span>
 </div></div>
-<div class="card">
-<h3>Notes</h3>
-<p>This is the first TC ever created by the TC skill — tracking its own implementation. A meta-record that serves as both documentation and validation of the system.</p>
-</div>
       </section>
 
       <!-- Files Affected Section -->
@@ -956,22 +957,7 @@ tbody tr:hover {
 <thead><tr>
 <th>File</th><th>Action</th><th>Description</th><th>+/-</th>
 </tr></thead><tbody>
-<tr><td><code>schemas/tc_record.schema.json</code></td><td><span class="badge badge-feature">created</span></td><td>Complete JSON Schema for TC records — all fields, types, constraints, enums</td><td><span class="new-value">+280</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>schemas/tc_registry.schema.json</code></td><td><span class="badge badge-feature">created</span></td><td>JSON Schema for the project-level TC registry (master index)</td><td><span class="new-value">+115</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>schemas/tc_config.schema.json</code></td><td><span class="badge badge-feature">created</span></td><td>JSON Schema for project-specific TC configuration</td><td><span class="new-value">+55</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>validators/validate_tc.py</code></td><td><span class="badge badge-feature">created</span></td><td>Python validator with state machine enforcement, schema validation, TC ID generation, and CLI</td><td><span class="new-value">+340</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>templates/tc_styles.css</code></td><td><span class="badge badge-feature">created</span></td><td>Accessible dark theme CSS — WCAG AA+, rem-based, high contrast, print stylesheet</td><td><span class="new-value">+520</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>templates/tc_record_template.html</code></td><td><span class="badge badge-feature">created</span></td><td>HTML template skeleton for individual TC record pages</td><td><span class="new-value">+80</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>templates/tc_dashboard_template.html</code></td><td><span class="badge badge-feature">created</span></td><td>HTML template skeleton for dashboard with CSS-only filters</td><td><span class="new-value">+75</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>generators/generate_tc_html.py</code></td><td><span class="badge badge-feature">created</span></td><td>Python generator: reads tc_record.json, validates, inlines CSS, outputs accessible HTML</td><td><span class="new-value">+420</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>generators/generate_dashboard.py</code></td><td><span class="badge badge-feature">created</span></td><td>Python generator: reads registry + records, builds dashboard with metrics and CSS-only filters</td><td><span class="new-value">+310</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>init/claude_md_snippet.md</code></td><td><span class="badge badge-feature">created</span></td><td>CLAUDE.md template with mandatory session start protocol, auto-tracking rules, and commands</td><td><span class="new-value">+65</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>init/settings_template.json</code></td><td><span class="badge badge-feature">created</span></td><td>Permissions template for .claude/settings.local.json</td><td><span class="new-value">+12</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>SKILL.md</code></td><td><span class="badge badge-feature">created</span></td><td>Complete skill definition with 8 commands, auto-detection rules, validation rules, and state machine docs</td><td><span class="new-value">+280</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>examples/example_tc_record.json</code></td><td><span class="badge badge-feature">created</span></td><td>Realistic example TC with all fields populated — authentication feature for Cards_bot</td><td><span class="new-value">+230</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>examples/example_tc_registry.json</code></td><td><span class="badge badge-feature">created</span></td><td>Example registry with 3 TCs in different states</td><td><span class="new-value">+70</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>.gitignore</code></td><td><span class="badge badge-feature">created</span></td><td>Git ignore for Python cache, IDE files, generated HTML</td><td><span class="new-value">+15</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>.claude/launch.json</code></td><td><span class="badge badge-feature">created</span></td><td>Preview server config for local HTML testing</td><td><span class="new-value">+10</span> / <span class="old-value">-0</span></td></tr>
+<tr><td><code>generators/generate_retro_from_git.py</code></td><td><span class="badge badge-feature">created</span></td><td>Git log parser with commit clustering, scope auto-detection, retro_changelog.json output</td><td><span class="new-value">+850</span> / <span class="old-value">-0</span></td></tr>
 </tbody></table></div>
       </section>
 
@@ -980,26 +966,8 @@ tbody tr:hover {
         <h2>Revision History</h2>
         <div class="timeline">
 <div class="timeline-item">
-<span class="revision-id">R3</span> <span class="revision-meta">2026-04-03 16:00 UTC-04:00 by ai:claude-opus-4-6</span>
-<div class="revision-summary">Validation and generation tests passed — example record validates, both HTML pages generated and opened in browser, published to GitHub</div>
-<div class="field-change">
-<span class="field-name">status</span> 
-<span class="old-value">implemented</span> &rarr; <span class="new-value">tested</span>
-<br><small style="color:var(--dim)">Reason: Validator passed on example data, HTML generated successfully, dark theme confirmed working in browser, published to GitHub at Elkidogz/technical-change-skill</small>
-</div>
-</div>
-<div class="timeline-item">
-<span class="revision-id">R2</span> <span class="revision-meta">2026-04-03 16:00 UTC-04:00 by ai:claude-opus-4-6</span>
-<div class="revision-summary">All phases complete — schemas, validator, CSS, templates, generators, init templates, SKILL.md, examples all implemented and verified</div>
-<div class="field-change">
-<span class="field-name">status</span> 
-<span class="old-value">planned</span> &rarr; <span class="new-value">implemented</span>
-<br><small style="color:var(--dim)">Reason: All 16 files implemented across 7 phases</small>
-</div>
-</div>
-<div class="timeline-item">
-<span class="revision-id">R1</span> <span class="revision-meta">2026-04-03 16:00 UTC-04:00 by ai:claude-opus-4-6</span>
-<div class="revision-summary">TC created — documenting the full initial implementation of the TC skill across all 7 phases</div>
+<span class="revision-id">R1</span> <span class="revision-meta">2026-04-05 21:30 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">TC created — auto-generate retro changelog from git history</div>
 <div class="field-change">
 <span class="field-name">status</span> 
 set to <span class="new-value">planned</span>
@@ -1012,180 +980,13 @@ set to <span class="new-value">planned</span>
       <!-- Sub-TCs Section -->
       <section id="sub-tcs" aria-label="Sub-TCs">
         <h2>Sub-TCs</h2>
-        <div class="card">
-<div class="card-header">
-<div>
-<span class="card-title">JSON Schemas</span>
-<br><code style="color:var(--dim);font-size:var(--font-sm)">TC-001.A</code>
-</div>
-<span class="badge badge-deployed">Deployed</span>
-</div>
-<p>tc_record, tc_registry, tc_config JSON Schema definitions</p>
-<div style="margin-top:var(--space-sm)"><strong style="color:var(--dim);font-size:var(--font-sm)">Files:</strong>
- <code style="font-size:var(--font-sm)">schemas/tc_record.schema.json</code>
- <code style="font-size:var(--font-sm)">schemas/tc_registry.schema.json</code>
- <code style="font-size:var(--font-sm)">schemas/tc_config.schema.json</code>
-</div>
-</div>
-<div class="card">
-<div class="card-header">
-<div>
-<span class="card-title">Validator &amp; State Machine</span>
-<br><code style="color:var(--dim);font-size:var(--font-sm)">TC-001.B</code>
-</div>
-<span class="badge badge-deployed">Deployed</span>
-</div>
-<p>Python validator with state machine, schema checks, TC ID generation, CLI</p>
-<div style="margin-top:var(--space-sm)"><strong style="color:var(--dim);font-size:var(--font-sm)">Files:</strong>
- <code style="font-size:var(--font-sm)">validators/validate_tc.py</code>
-</div>
-</div>
-<div class="card">
-<div class="card-header">
-<div>
-<span class="card-title">CSS &amp; HTML Templates</span>
-<br><code style="color:var(--dim);font-size:var(--font-sm)">TC-001.C</code>
-</div>
-<span class="badge badge-deployed">Deployed</span>
-</div>
-<p>Accessible dark theme CSS and template skeletons for TC records and dashboard</p>
-<div style="margin-top:var(--space-sm)"><strong style="color:var(--dim);font-size:var(--font-sm)">Files:</strong>
- <code style="font-size:var(--font-sm)">templates/tc_styles.css</code>
- <code style="font-size:var(--font-sm)">templates/tc_record_template.html</code>
- <code style="font-size:var(--font-sm)">templates/tc_dashboard_template.html</code>
-</div>
-</div>
-<div class="card">
-<div class="card-header">
-<div>
-<span class="card-title">Python HTML Generators</span>
-<br><code style="color:var(--dim);font-size:var(--font-sm)">TC-001.D</code>
-</div>
-<span class="badge badge-deployed">Deployed</span>
-</div>
-<p>generate_tc_html.py and generate_dashboard.py — reads JSON, validates, inlines CSS, outputs HTML</p>
-<div style="margin-top:var(--space-sm)"><strong style="color:var(--dim);font-size:var(--font-sm)">Files:</strong>
- <code style="font-size:var(--font-sm)">generators/generate_tc_html.py</code>
- <code style="font-size:var(--font-sm)">generators/generate_dashboard.py</code>
-</div>
-</div>
-<div class="card">
-<div class="card-header">
-<div>
-<span class="card-title">Skill Definition &amp; Init Templates</span>
-<br><code style="color:var(--dim);font-size:var(--font-sm)">TC-001.E</code>
-</div>
-<span class="badge badge-deployed">Deployed</span>
-</div>
-<p>SKILL.md with 8 commands, CLAUDE.md snippet, settings template</p>
-<div style="margin-top:var(--space-sm)"><strong style="color:var(--dim);font-size:var(--font-sm)">Files:</strong>
- <code style="font-size:var(--font-sm)">SKILL.md</code>
- <code style="font-size:var(--font-sm)">init/claude_md_snippet.md</code>
- <code style="font-size:var(--font-sm)">init/settings_template.json</code>
-</div>
-</div>
+        <div class="empty-state"><p>No sub-TCs defined.</p></div>
       </section>
 
       <!-- Test Cases Section -->
       <section id="tests" aria-label="Test Cases">
         <h2>Test Cases</h2>
-        <div class="test-case">
-<div class="test-header">
-<div><span class="test-id">T1</span> <span class="test-title">Example TC record passes schema validation</span></div><span class="badge badge-pass">PASS</span>
-</div>
-<div class="result-label">Procedure</div>
-<ol class="procedure-steps">
-<li>Run validate_tc.py against examples/example_tc_record.json</li>
-<li>Check exit code is 0 and output is VALID</li>
-</ol>
-<div class="result-label">Expected Result</div>
-<div class="result-value">Validator outputs VALID with exit code 0</div>
-<div class="result-label">Actual Result</div>
-<div class="result-value">Output: VALID, exit code: 0</div>
-<div class="result-label">Evidence</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<span class="badge badge-infrastructure">command_output</span> Validator CLI output
-<div class="code-block">python validators/validate_tc.py examples/example_tc_record.json
-VALID</div>
-</div>
-<div class="card-meta" style="margin-top:var(--space-sm)">
-Tested by: ai:claude-opus-4-6
- on 2026-04-03 16:00 UTC-04:00
-</div>
-</div>
-<div class="test-case">
-<div class="test-header">
-<div><span class="test-id">T2</span> <span class="test-title">Example registry passes schema validation</span></div><span class="badge badge-pass">PASS</span>
-</div>
-<div class="result-label">Procedure</div>
-<ol class="procedure-steps">
-<li>Run validate_tc.py --registry against examples/example_tc_registry.json</li>
-<li>Check exit code is 0</li>
-</ol>
-<div class="result-label">Expected Result</div>
-<div class="result-value">Validator outputs VALID with exit code 0</div>
-<div class="result-label">Actual Result</div>
-<div class="result-value">Output: VALID, exit code: 0</div>
-<div class="result-label">Evidence</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<span class="badge badge-infrastructure">command_output</span> Registry validation output
-<div class="code-block">python validators/validate_tc.py --registry examples/example_tc_registry.json
-VALID</div>
-</div>
-<div class="card-meta" style="margin-top:var(--space-sm)">
-Tested by: ai:claude-opus-4-6
- on 2026-04-03 16:00 UTC-04:00
-</div>
-</div>
-<div class="test-case">
-<div class="test-header">
-<div><span class="test-id">T3</span> <span class="test-title">TC HTML generator produces valid output</span></div><span class="badge badge-pass">PASS</span>
-</div>
-<div class="result-label">Procedure</div>
-<ol class="procedure-steps">
-<li>Run generate_tc_html.py on example record</li>
-<li>Verify HTML file is created</li>
-<li>Verify CSS is inlined (dark theme variables present)</li>
-</ol>
-<div class="result-label">Expected Result</div>
-<div class="result-value">HTML file generated with inlined CSS, dark theme, and all sections populated</div>
-<div class="result-label">Actual Result</div>
-<div class="result-value">Generated examples/example_tc_record.html (1188 lines), CSS fully inlined with --bg: #0d0d18, all sections rendered</div>
-<div class="result-label">Evidence</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<span class="badge badge-infrastructure">command_output</span> Generator output
-<div class="code-block">python generators/generate_tc_html.py examples/example_tc_record.json --output examples/example_tc_record.html
-Generated: examples\example_tc_record.html</div>
-</div>
-<div class="card-meta" style="margin-top:var(--space-sm)">
-Tested by: ai:claude-opus-4-6
- on 2026-04-03 16:00 UTC-04:00
-</div>
-</div>
-<div class="test-case">
-<div class="test-header">
-<div><span class="test-id">T4</span> <span class="test-title">Dashboard generator produces valid output</span></div><span class="badge badge-pass">PASS</span>
-</div>
-<div class="result-label">Procedure</div>
-<ol class="procedure-steps">
-<li>Run generate_dashboard.py on example registry</li>
-<li>Verify HTML file is created with status metrics and TC cards</li>
-</ol>
-<div class="result-label">Expected Result</div>
-<div class="result-value">Dashboard HTML with status stats, distribution bar, filter bar, and TC cards</div>
-<div class="result-label">Actual Result</div>
-<div class="result-value">Generated examples/example_dashboard.html (973 lines), all sections present</div>
-<div class="result-label">Evidence</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<span class="badge badge-infrastructure">command_output</span> Dashboard generator output
-<div class="code-block">python generators/generate_dashboard.py examples/example_tc_registry.json --output examples/example_dashboard.html
-Generated: examples\example_dashboard.html</div>
-</div>
-<div class="card-meta" style="margin-top:var(--space-sm)">
-Tested by: ai:claude-opus-4-6
- on 2026-04-03 16:00 UTC-04:00
-</div>
-</div>
+        <div class="empty-state"><p>No test cases defined yet.</p></div>
       </section>
 
       <!-- Session Context Section -->
@@ -1193,50 +994,171 @@ Tested by: ai:claude-opus-4-6
         <h2>Session Context</h2>
         <h3>Current Session</h3>
 <div class="session-info">
-<div class="session-field"><div class="field-label">Session ID</div><div class="field-value">claude-opus-session-tc-build-001</div></div>
+<div class="session-field"><div class="field-label">Session ID</div><div class="field-value">session-2026-04-05-tc-creation</div></div>
 <div class="session-field"><div class="field-label">Platform</div><div class="field-value">claude_code</div></div>
 <div class="session-field"><div class="field-label">Model</div><div class="field-value">claude-opus-4-6</div></div>
-<div class="session-field"><div class="field-label">Started</div><div class="field-value">2026-04-03 15:00 UTC-04:00</div></div>
-<div class="session-field"><div class="field-label">Last Active</div><div class="field-value">2026-04-03 16:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Started</div><div class="field-value">2026-04-05 21:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Last Active</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
 </div>
 <div class="handoff-section">
 <h3>Handoff Data</h3>
 <div class="result-label">Progress Summary</div>
-<p class="result-value">Full TC skill implementation complete. All 7 phases done. 16 files created. Validator, generators, and examples all verified. Published to GitHub at Elkidogz/technical-change-skill. Dogfooding by creating this TC record for the skill itself.</p>
+<p class="result-value">TC created, no work started yet</p>
 <div class="result-label">Next Steps</div>
 <ul class="handoff-list">
-<li>Deploy TC tracking to other projects in AI BOTS directory using /tc init</li>
-<li>User to approve and close this TC (transition to deployed)</li>
-<li>Consider adding README.md to the GitHub repo for public documentation</li>
+<li>1. Design commit grouping algorithm (file overlap + timeframe clustering)</li>
+<li>2. Write Python script generators/generate_retro_from_git.py</li>
+<li>3. Parse git log --format with files changed</li>
+<li>4. Implement smart grouping into logical TCs</li>
+<li>5. Output valid retro_changelog.json matching schema</li>
+<li>6. Update SKILL.md with --from-git docs</li>
+<li>7. Test against this repo and a larger project</li>
 </ul>
 <div class="result-label">Key Context</div>
 <ul class="handoff-list">
-<li>Python 3.13.6 on Windows 11, all generators use stdlib only</li>
-<li>User has low vision — all HTML is WCAG AA+ with rem-based fonts</li>
-<li>Dark theme matches Cards_bot design: #0d0d18 bg, #d4af37 gold</li>
-<li>GitHub repo: Elkidogz/technical-change-skill (public)</li>
+<li>M</li>
+<li>u</li>
+<li>s</li>
+<li>t</li>
+<li> </li>
+<li>u</li>
+<li>s</li>
+<li>e</li>
+<li> </li>
+<li>P</li>
+<li>y</li>
+<li>t</li>
+<li>h</li>
+<li>o</li>
+<li>n</li>
+<li> </li>
+<li>s</li>
+<li>t</li>
+<li>d</li>
+<li>l</li>
+<li>i</li>
+<li>b</li>
+<li> </li>
+<li>o</li>
+<li>n</li>
+<li>l</li>
+<li>y</li>
+<li> </li>
+<li>t</li>
+<li>o</li>
+<li> </li>
+<li>m</li>
+<li>a</li>
+<li>t</li>
+<li>c</li>
+<li>h</li>
+<li> </li>
+<li>e</li>
+<li>x</li>
+<li>i</li>
+<li>s</li>
+<li>t</li>
+<li>i</li>
+<li>n</li>
+<li>g</li>
+<li> </li>
+<li>g</li>
+<li>e</li>
+<li>n</li>
+<li>e</li>
+<li>r</li>
+<li>a</li>
+<li>t</li>
+<li>o</li>
+<li>r</li>
+<li> </li>
+<li>c</li>
+<li>o</li>
+<li>n</li>
+<li>v</li>
+<li>e</li>
+<li>n</li>
+<li>t</li>
+<li>i</li>
+<li>o</li>
+<li>n</li>
+<li>s</li>
+<li>.</li>
+<li> </li>
+<li>G</li>
+<li>i</li>
+<li>t</li>
+<li> </li>
+<li>l</li>
+<li>o</li>
+<li>g</li>
+<li> </li>
+<li>p</li>
+<li>a</li>
+<li>r</li>
+<li>s</li>
+<li>i</li>
+<li>n</li>
+<li>g</li>
+<li> </li>
+<li>s</li>
+<li>h</li>
+<li>o</li>
+<li>u</li>
+<li>l</li>
+<li>d</li>
+<li> </li>
+<li>h</li>
+<li>a</li>
+<li>n</li>
+<li>d</li>
+<li>l</li>
+<li>e</li>
+<li> </li>
+<li>m</li>
+<li>e</li>
+<li>r</li>
+<li>g</li>
+<li>e</li>
+<li> </li>
+<li>c</li>
+<li>o</li>
+<li>m</li>
+<li>m</li>
+<li>i</li>
+<li>t</li>
+<li>s</li>
+<li> </li>
+<li>a</li>
+<li>n</li>
+<li>d</li>
+<li> </li>
+<li>s</li>
+<li>q</li>
+<li>u</li>
+<li>a</li>
+<li>s</li>
+<li>h</li>
+<li> </li>
+<li>m</li>
+<li>e</li>
+<li>r</li>
+<li>g</li>
+<li>e</li>
+<li>s</li>
+<li> </li>
+<li>g</li>
+<li>r</li>
+<li>a</li>
+<li>c</li>
+<li>e</li>
+<li>f</li>
+<li>u</li>
+<li>l</li>
+<li>l</li>
+<li>y</li>
+<li>.</li>
 </ul>
-<div class="result-label">Decisions Made</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<strong>Python stdlib only — no external dependencies</strong>
-<br><span style="color:var(--dim)">Ensures portability across all 10+ projects without dependency management overhead</span>
-<br><small style="color:var(--dim)">2026-04-03 15:00 UTC-04:00</small>
-</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<strong>CSS-only dashboard interactivity (no JavaScript)</strong>
-<br><span style="color:var(--dim)">Self-contained HTML files that work from file:// URLs without a server</span>
-<br><small style="color:var(--dim)">2026-04-03 15:00 UTC-04:00</small>
-</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<strong>Append-only revision history rather than archived snapshots</strong>
-<br><span style="color:var(--dim)">Simpler to manage, single file per TC, no file proliferation</span>
-<br><small style="color:var(--dim)">2026-04-03 15:00 UTC-04:00</small>
-</div>
-<div class="card" style="margin-bottom:var(--space-sm)">
-<strong>Session handoff embedded in TC record rather than separate file</strong>
-<br><span style="color:var(--dim)">Everything about a TC in one place — the next bot reads one file to get full context</span>
-<br><small style="color:var(--dim)">2026-04-03 15:00 UTC-04:00</small>
-</div>
 </div>
       </section>
 
@@ -1247,7 +1169,7 @@ Tested by: ai:claude-opus-4-6
 <span style="font-size:var(--font-3xl)">&#10007;</span>
 <div>
 <strong style="font-size:var(--font-xl)">Not Yet Approved</strong>
-<br>Test Coverage: <span class="badge badge-full">FULL</span>
+<br>Test Coverage: <span class="badge badge-none">NONE</span>
 </div></div>
       </section>
 

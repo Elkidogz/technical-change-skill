@@ -273,6 +273,46 @@ Use this when onboarding an existing project with extensive undocumented history
 README, and code to build the retro_changelog.json. Group related changes into single TCs.
 Each TC should represent one logical unit of work (a feature, a fix, a refactor).
 
+#### /tc retro --from-git
+Auto-generate the retro_changelog.json directly from git history instead of building it manually.
+
+**Steps:**
+1. Run the git-to-changelog generator:
+   ```bash
+   python "{skills_library_path}/generators/generate_retro_from_git.py" \
+     --repo-path "." \
+     --output "retro_changelog.json" \
+     --project-name "Project Name" \
+     --since "2024-01-01" \
+     --until "2026-04-05"
+   ```
+2. The generator will:
+   - Parse `git log` to extract all commits with files changed, dates, authors, messages
+   - Group related commits into logical TCs using:
+     - Merge commit / PR boundaries (primary, if the repo uses merge/squash workflow)
+     - File-overlap clustering (commits touching the same files)
+     - Time-proximity grouping (same author, within ~2 hour window)
+   - Auto-detect scope from commit messages: "fix" -> bugfix, "feat" -> feature, "refactor" -> refactor, "docs" -> documentation, "chore"/"ci" -> infrastructure
+   - Auto-detect priority: default medium, "critical"/"urgent"/"hotfix" -> critical/high
+   - Write a valid `retro_changelog.json` matching `schemas/tc_retro_changelog.schema.json`
+3. Review the generated changelog (optional but recommended — edit titles, adjust scopes/priorities)
+4. Feed it into the batch TC generator:
+   ```bash
+   python "{skills_library_path}/generators/generate_retro_tcs.py" "retro_changelog.json" "docs/TC"
+   ```
+5. Report: total TCs created, link to dashboard
+
+**CLI Options:**
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--repo-path PATH` | `.` | Path to the git repository |
+| `--output PATH` | `retro_changelog.json` | Output file path |
+| `--project-name NAME` | auto-detected | Project name for the changelog header |
+| `--since DATE` | (all history) | Only include commits after YYYY-MM-DD |
+| `--until DATE` | (all history) | Only include commits up to YYYY-MM-DD |
+| `--author NAME` | `retroactive` | Default author field in the changelog |
+| `--time-window HOURS` | `2` | Clustering time window in hours |
+
 ---
 
 ## Auto-Detection Rules — Non-Blocking Subagent Pattern
@@ -344,6 +384,9 @@ python "validators/validate_tc.py" --registry "<path_to_tc_registry.json>"
 
 # Retroactive batch creation
 python "generators/generate_retro_tcs.py" "<retro_changelog.json>" "<docs/TC/>"
+
+# Generate retro_changelog.json from git history
+python "generators/generate_retro_from_git.py" [--repo-path .] [--output retro_changelog.json] [--project-name "Name"] [--since 2024-01-01] [--until 2026-04-05]
 ```
 
 All generators use Python stdlib only — no external dependencies.

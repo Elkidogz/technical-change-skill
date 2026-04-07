@@ -1,0 +1,28 @@
+# TC records and evidence (project-specific, not needed at install time)
+docs/TC/records/
+docs/TC/evidence/
+docs/
+
+# Git
+.git/
+.gitignore
+
+# Claude Code local config
+.claude/
+.claude-plugin/
+
+# Examples (large files not needed at install time)
+examples/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store

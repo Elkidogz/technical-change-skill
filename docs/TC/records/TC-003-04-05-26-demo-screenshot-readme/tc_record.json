@@ -1,0 +1,82 @@
+{
+  "tc_id": "TC-003-04-05-26-demo-screenshot-readme",
+  "parent_tc": null,
+  "title": "Demo Screenshot and Hero Image for README",
+  "status": "implemented",
+  "priority": "medium",
+  "created": "2026-04-05T21:30:00-04:00",
+  "updated": "2026-04-05T21:30:00-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Add demo screenshots of the TC dashboard and individual TC record HTML pages to the README for visual impact in registry PR reviews",
+    "motivation": "The 6 open PRs across skill registries lack visual proof of what the skill produces. A hero image showing the dark-theme dashboard and a TC record page would make the PRs significantly more compelling and help drive adoption.",
+    "scope": "documentation",
+    "detailed_design": "Generate fresh example data with multiple TCs in various states, capture screenshots of the dashboard and a TC record page, add to README with descriptive alt text. Consider a single composite hero image or 2-3 focused screenshots.",
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    { "path": "docs/TC/screenshots/dashboard.png", "action": "created", "description": "Full-page dashboard screenshot captured via Playwright", "lines_added": 0, "lines_removed": 0 },
+    { "path": "docs/TC/screenshots/tc-record.png", "action": "created", "description": "Full-page TC record detail screenshot captured via Playwright", "lines_added": 0, "lines_removed": 0 },
+    { "path": "README.md", "action": "modified", "description": "Added hero images with alt text after title", "lines_added": 5, "lines_removed": 0 }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-05T21:30:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created — demo screenshots needed to strengthen registry PR submissions",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "Initial TC creation" }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-04-05T22:00:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "Captured dashboard and TC record screenshots via Playwright, added to README with descriptive alt text",
+      "field_changes": [
+        { "field": "status", "action": "changed", "old_value": "planned", "new_value": "implemented", "reason": "Screenshots captured and README updated" }
+      ]
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": null,
+    "test_coverage_status": "none"
+  },
+  "notes": "",
+  "related_tcs": [],
+  "tags": ["documentation", "readme", "screenshots", "adoption"],
+  "metadata": {
+    "version": "1.0.0",
+    "schema_version": "1.0",
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified": "2026-04-05T21:30:00-04:00",
+    "last_modified_by": "ai:claude-opus-4-6"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-2026-04-05-tc-creation",
+      "started": "2026-04-05T21:00:00-04:00",
+      "last_active": "2026-04-05T21:30:00-04:00",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6"
+    },
+    "handoff": {
+      "progress_summary": "TC created, no work started yet",
+      "next_steps": ["1. Generate fresh example TC data with multiple states", "2. Capture dashboard screenshot", "3. Capture individual TC record screenshot", "4. Add images to README with alt text", "5. Update existing registry PRs with visual"],
+      "blockers": [],
+      "key_context": "6 PRs are open across registries — visuals would help all of them",
+      "files_in_progress": [],
+      "recent_decisions": []
+    },
+    "session_history": []
+  }
+}

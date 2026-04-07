@@ -1,0 +1,80 @@
+{
+  "tc_id": "TC-006-04-05-26-cross-agent-compat",
+  "parent_tc": null,
+  "title": "Cross-Agent Compatibility (Cursor, Codex, Gemini CLI)",
+  "status": "implemented",
+  "priority": "medium",
+  "created": "2026-04-05T21:30:00-04:00",
+  "updated": "2026-04-05T21:30:00-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Add install paths and trigger syntax for Cursor, Codex CLI, and Gemini CLI so the TC skill works across all major AI coding agents",
+    "motivation": "The skill registries (antigravity, VoltAgent, daymade) all value cross-agent compatibility. Currently the skill only targets Claude Code. Supporting other agents widens the addressable user base and strengthens the registry submissions.",
+    "scope": "enhancement",
+    "detailed_design": "Map each agent's skill directory convention (.cursor/skills/, .codex/skills/, .gemini/skills/), adapt trigger syntax if needed, add per-agent install instructions to README, and integrate into the npm CLI (TC-004) via --cursor/--codex/--gemini flags.",
+    "breaking_changes": [],
+    "dependencies": ["TC-004-04-05-26-npm-package"]
+  },
+  "files_affected": [
+    { "path": "README.md", "action": "modified", "description": "Added per-agent install instructions for Claude Code, Cursor, Codex CLI, Gemini CLI, and GitHub Copilot", "lines_added": 30, "lines_removed": 4 }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-05T21:30:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created — cross-agent support for Cursor, Codex, Gemini CLI",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "Initial TC creation" }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-04-05T22:15:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "Added per-agent install instructions to README for Cursor, Codex CLI, Gemini CLI, and GitHub Copilot with correct paths and trigger syntax",
+      "field_changes": [
+        { "field": "status", "action": "changed", "old_value": "planned", "new_value": "implemented", "reason": "README updated with all 5 agent install paths. CLI integration deferred to TC-004." }
+      ]
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": null,
+    "test_coverage_status": "none"
+  },
+  "notes": "",
+  "related_tcs": ["TC-004-04-05-26-npm-package"],
+  "tags": ["cross-agent", "cursor", "codex", "gemini", "compatibility"],
+  "metadata": {
+    "version": "1.0.0",
+    "schema_version": "1.0",
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified": "2026-04-05T21:30:00-04:00",
+    "last_modified_by": "ai:claude-opus-4-6"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-2026-04-05-tc-creation",
+      "started": "2026-04-05T21:00:00-04:00",
+      "last_active": "2026-04-05T21:30:00-04:00",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6"
+    },
+    "handoff": {
+      "progress_summary": "TC created, no work started yet",
+      "next_steps": ["1. Research each agent's skill directory conventions", "2. Test SKILL.md frontmatter compatibility with each agent", "3. Add per-agent install instructions to README", "4. Integrate --cursor/--codex/--gemini flags into npm CLI (TC-004)", "5. Test install and trigger on each platform"],
+      "blockers": ["Depends on TC-004 npm package for CLI flag integration"],
+      "key_context": "The SKILL.md format follows the agentskills.io spec which is cross-agent by design. Main work is path mapping and install docs, not skill rewriting.",
+      "files_in_progress": [],
+      "recent_decisions": []
+    },
+    "session_history": []
+  }
+}

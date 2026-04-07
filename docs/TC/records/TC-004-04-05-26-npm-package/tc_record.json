@@ -1,0 +1,73 @@
+{
+  "tc_id": "TC-004-04-05-26-npm-package",
+  "parent_tc": null,
+  "title": "npm Package — npx tc-skill",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-04-05T21:30:00-04:00",
+  "updated": "2026-04-05T21:30:00-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Publish the TC skill as an npm package so users can install with npx tc-skill init instead of cloning the repo",
+    "motivation": "Lowering the adoption barrier is critical for gaining traction. npm install is the standard onboarding path for the major skill registries (antigravity uses npx, superpowers uses plugin install). A CLI entry point makes the skill accessible to users who don't want to manually clone and wire up files.",
+    "scope": "infrastructure",
+    "detailed_design": "Create package.json with bin entry, CLI script that copies skill files into the target project, support --claude/--cursor/--codex/--gemini flags for agent-specific paths. Keep it simple — the CLI copies files and runs tc init.",
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    { "path": "package.json", "action": "created", "description": "npm package manifest with bin entry, keywords, and file list", "lines_added": 46, "lines_removed": 0 },
+    { "path": "bin/tc-skill.js", "action": "created", "description": "CLI entry point with init and install commands, cross-platform support", "lines_added": 420, "lines_removed": 0 },
+    { "path": ".npmignore", "action": "created", "description": "Excludes docs/TC/records, evidence, .git, examples from npm package", "lines_added": 15, "lines_removed": 0 }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-05T21:30:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created — npm package to lower adoption barrier",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "Initial TC creation" }
+      ]
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": null,
+    "test_coverage_status": "none"
+  },
+  "notes": "",
+  "related_tcs": ["TC-006-04-05-26-cross-agent-compat"],
+  "tags": ["npm", "cli", "infrastructure", "adoption", "developer-experience"],
+  "metadata": {
+    "version": "1.0.0",
+    "schema_version": "1.0",
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified": "2026-04-05T21:30:00-04:00",
+    "last_modified_by": "ai:claude-opus-4-6"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-2026-04-05-tc-creation",
+      "started": "2026-04-05T21:00:00-04:00",
+      "last_active": "2026-04-05T21:30:00-04:00",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6"
+    },
+    "handoff": {
+      "progress_summary": "TC created, no work started yet",
+      "next_steps": ["1. Create package.json with name, bin, version", "2. Write CLI entry point (Node.js) with --claude/--cursor/--codex/--gemini flags", "3. Implement file copy logic for skill files", "4. Test npx tc-skill init locally", "5. Confirm npm account access", "6. Publish to npm"],
+      "blockers": ["Need to confirm npm account credentials with user"],
+      "key_context": "Should integrate with TC-006 cross-agent compat — the --flag approach serves both goals",
+      "files_in_progress": [],
+      "recent_decisions": []
+    },
+    "session_history": []
+  }
+}

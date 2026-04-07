@@ -1,0 +1,71 @@
+{
+  "tc_id": "TC-005-04-05-26-retro-from-git",
+  "parent_tc": null,
+  "title": "/tc retro --from-git Auto-Mode",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-04-05T21:30:00-04:00",
+  "updated": "2026-04-05T21:30:00-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Add --from-git flag to /tc retro that auto-analyzes git log and generates retro_changelog.json without requiring manual JSON authoring",
+    "motivation": "The current /tc retro requires users to manually write a retro_changelog.json file, which is tedious for projects with extensive history. Auto-generating from git log removes this friction and makes onboarding existing projects much faster. Originally specified in GitHub issue #1 but the --from-git mode was not implemented.",
+    "scope": "feature",
+    "detailed_design": "Python script that runs git log, parses commits, groups related commits into logical TCs by file overlap and timeframe, extracts metadata (files changed, dates, tags), and outputs a valid retro_changelog.json. Can be used standalone or piped into the existing retro generator.",
+    "breaking_changes": [],
+    "dependencies": ["git CLI available in PATH"]
+  },
+  "files_affected": [
+    { "path": "generators/generate_retro_from_git.py", "action": "created", "description": "Git log parser with commit clustering, scope auto-detection, retro_changelog.json output", "lines_added": 850, "lines_removed": 0 }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-05T21:30:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created — auto-generate retro changelog from git history",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "Initial TC creation" }
+      ]
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": null,
+    "test_coverage_status": "none"
+  },
+  "notes": "",
+  "related_tcs": [],
+  "tags": ["retro", "git", "automation", "onboarding"],
+  "metadata": {
+    "version": "1.0.0",
+    "schema_version": "1.0",
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified": "2026-04-05T21:30:00-04:00",
+    "last_modified_by": "ai:claude-opus-4-6"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-2026-04-05-tc-creation",
+      "started": "2026-04-05T21:00:00-04:00",
+      "last_active": "2026-04-05T21:30:00-04:00",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6"
+    },
+    "handoff": {
+      "progress_summary": "TC created, no work started yet",
+      "next_steps": ["1. Design commit grouping algorithm (file overlap + timeframe clustering)", "2. Write Python script generators/generate_retro_from_git.py", "3. Parse git log --format with files changed", "4. Implement smart grouping into logical TCs", "5. Output valid retro_changelog.json matching schema", "6. Update SKILL.md with --from-git docs", "7. Test against this repo and a larger project"],
+      "blockers": [],
+      "key_context": "Must use Python stdlib only to match existing generator conventions. Git log parsing should handle merge commits and squash merges gracefully.",
+      "files_in_progress": [],
+      "recent_decisions": []
+    },
+    "session_history": []
+  }
+}

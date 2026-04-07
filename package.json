@@ -1,0 +1,46 @@
+{
+  "name": "tc-skill",
+  "version": "1.0.0",
+  "description": "A structured code change tracking system for AI coding agents. Documents every code change with JSON records and accessible HTML output, enabling AI bot sessions to seamlessly resume work when previous sessions expire.",
+  "main": "bin/tc-skill.js",
+  "bin": {
+    "tc-skill": "./bin/tc-skill.js"
+  },
+  "scripts": {
+    "test": "node bin/tc-skill.js --version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Elkidogz/technical-change-skill"
+  },
+  "author": "Elkidogz",
+  "license": "MIT",
+  "keywords": [
+    "change-tracking",
+    "session-handoff",
+    "documentation",
+    "accessibility",
+    "json-schema",
+    "state-machine",
+    "developer-tools",
+    "claude",
+    "ai-agent",
+    "cursor",
+    "codex",
+    "gemini"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "schemas/",
+    "validators/",
+    "generators/",
+    "templates/",
+    "init/",
+    "README.md",
+    "LICENSE"
+  ]
+}

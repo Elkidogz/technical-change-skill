@@ -1,0 +1,83 @@
+{
+  "tc_id": "TC-007-04-06-26-self-reflection-add-claude-md",
+  "parent_tc": null,
+  "title": "Self-Reflection: Add CLAUDE.md Project Instructions",
+  "status": "planned",
+  "priority": "medium",
+  "created": "2026-04-06T00:00:00-04:00",
+  "updated": "2026-04-06T00:00:00-04:00",
+  "created_by": "ai:self-reflection-skill",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Published skill with complex structure (schemas, generators, validators, templates) but no CLAUDE.md. Create one documenting skill structure, key files, testing, design decisions.",
+    "motivation": "Flagged by self-reflection skill 2026-04-06.",
+    "scope": "documentation",
+    "detailed_design": "",
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-06T00:00:00-04:00",
+      "author": "ai:self-reflection-skill",
+      "summary": "TC created by self-reflection skill. Flagged missing CLAUDE.md project instructions.",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "New documentation TC created. CLAUDE.md needed to document skill structure, key files, testing approach, and design decisions for future contributors."
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-2026-04-06-self-reflection",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6",
+      "started": "2026-04-06T00:00:00-04:00",
+      "last_active": "2026-04-06T00:00:00-04:00"
+    },
+    "handoff": {
+      "progress_summary": "TC created. No work started yet.",
+      "next_steps": [
+        "Audit skill directory structure (schemas, generators, validators, templates)",
+        "Draft CLAUDE.md documenting key files and their purposes",
+        "Document testing approach and validation workflow",
+        "Capture design decisions (state machine, HTML generation pipeline, etc.)",
+        "Place CLAUDE.md at skill root"
+      ],
+      "blockers": [],
+      "key_context": [
+        "Skill is published and used across multiple projects",
+        "Complex structure with schemas/generators/validators/templates",
+        "No project-level CLAUDE.md exists currently"
+      ],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": ["self-reflection", "documentation"],
+  "related_tcs": [],
+  "notes": "Flagged by automated self-reflection skill 2026-04-06.",
+  "metadata": {
+    "project": "technical-change-skill",
+    "created_by": "ai:self-reflection-skill",
+    "last_modified_by": "ai:self-reflection-skill",
+    "last_modified": "2026-04-06T00:00:00-04:00",
+    "estimated_effort": "small"
+  }
+}
