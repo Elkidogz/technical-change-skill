@@ -1,10 +1,43 @@
 {
-  "_comment": "TC Skill permissions — merge into .claude/settings.local.json",
+  "_comment": "TC Skill permissions and hooks — merge into .claude/settings.local.json",
   "permissions": {
     "allow": [
       "Bash(python \"{skills_library_path}/generators/generate_tc_html.py\":*)",
       "Bash(python \"{skills_library_path}/generators/generate_dashboard.py\":*)",
-      "Bash(python \"{skills_library_path}/validators/validate_tc.py\":*)"
+      "Bash(python \"{skills_library_path}/validators/validate_tc.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/tc_git_link.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/tc_git_status.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/generate_retro_tcs.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/generate_retro_from_git.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/tc_git_autolink.py\":*)",
+      "Bash(python \"{skills_library_path}/generators/tc_precommit_check.py\":*)"
     ]
+  },
+  "_hooks_comment": "Optional git integration hooks (opt-in via /tc init). Uncomment the hooks block below to enable auto-linking commits to in-progress TCs and pre-commit advisory warnings.",
+  "_hooks_opt_in": {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "python \"{skills_library_path}/generators/tc_git_autolink.py\" --if-commit"
+            }
+          ]
+        }
+      ],
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "python \"{skills_library_path}/generators/tc_precommit_check.py\" --if-commit"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

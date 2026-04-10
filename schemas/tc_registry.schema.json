@@ -49,7 +49,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed", "paused", "voided"],
             "description": "Current TC status (must match the record)"
           },
           "scope": {
@@ -119,7 +119,9 @@
             "blocked": { "type": "integer", "minimum": 0, "default": 0 },
             "implemented": { "type": "integer", "minimum": 0, "default": 0 },
             "tested": { "type": "integer", "minimum": 0, "default": 0 },
-            "deployed": { "type": "integer", "minimum": 0, "default": 0 }
+            "deployed": { "type": "integer", "minimum": 0, "default": 0 },
+            "paused": { "type": "integer", "minimum": 0, "default": 0 },
+            "voided": { "type": "integer", "minimum": 0, "default": 0 }
           },
           "additionalProperties": false,
           "description": "Count per implementation state"

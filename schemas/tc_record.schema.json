@@ -44,7 +44,7 @@
     },
     "status": {
       "type": "string",
-      "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+      "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed", "paused", "voided"],
       "description": "Current implementation state"
     },
     "priority": {
@@ -230,7 +230,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed", "paused", "voided"],
             "description": "Sub-TC implementation state"
           },
           "description": {
@@ -541,6 +541,163 @@
       "type": "string",
       "default": "",
       "description": "Freeform notes"
+    },
+    "git": {
+      "type": ["object", "null"],
+      "default": null,
+      "description": "Optional git version control metadata. Absent/null = offline-only record with no git linkage. Present = TC is linked to commits, branches, and optionally remote PRs.",
+      "properties": {
+        "repo_root": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Relative path from TC record to repo root (usually '../../../..'). Lets TC stay linked when repo is moved."
+        },
+        "initial_branch": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Branch name when this TC was first linked to git"
+        },
+        "commits": {
+          "type": "array",
+          "default": [],
+          "description": "Append-only list of commits linked to this TC. Never modify past entries.",
+          "items": {
+            "type": "object",
+            "required": ["sha", "short_sha", "author", "authored_date", "subject", "parent_count", "linked_at", "link_source"],
+            "properties": {
+              "sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{7,40}$",
+                "description": "Git commit SHA (7-40 hex chars)"
+              },
+              "short_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{7,12}$",
+                "description": "Short SHA for display (typically 7 chars)"
+              },
+              "author": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Commit author from git (distinct from TC created_by)"
+              },
+              "authored_date": {
+                "type": "string",
+                "format": "date-time",
+                "description": "ISO 8601 commit timestamp"
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Commit subject line (first line of message)"
+              },
+              "branch": {
+                "type": ["string", "null"],
+                "default": null,
+                "description": "Branch the commit was on when linked"
+              },
+              "parent_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of parents (>=2 indicates a merge commit)"
+              },
+              "files_changed": {
+                "type": "array",
+                "items": { "type": "string" },
+                "default": [],
+                "description": "File paths touched by this commit (forward slashes, relative to repo root)"
+              },
+              "linked_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When this commit was linked to the TC"
+              },
+              "link_source": {
+                "type": "string",
+                "enum": ["auto-hook", "manual", "retro"],
+                "description": "How the commit came to be linked: auto-hook (post-commit), manual (/tc link), or retro (backfill)"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "remotes": {
+          "type": "array",
+          "default": [],
+          "description": "Optional remote repository and PR metadata. Empty array = offline-only. Populated by /tc pr link and /tc sync (online opt-in features).",
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "provider"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Remote name (e.g., 'origin')"
+              },
+              "url": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Remote URL (https or ssh)"
+              },
+              "provider": {
+                "type": "string",
+                "enum": ["github", "gitlab", "bitbucket", "other"],
+                "description": "Detected provider from URL parsing"
+              },
+              "pr": {
+                "type": ["object", "null"],
+                "default": null,
+                "description": "PR metadata. Null until /tc pr link is run. Populated from gh/glab CLI or MCP.",
+                "properties": {
+                  "number": {
+                    "type": ["integer", "null"],
+                    "minimum": 1,
+                    "default": null,
+                    "description": "PR/MR number"
+                  },
+                  "url": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "Full PR URL for link-out"
+                  },
+                  "state": {
+                    "type": ["string", "null"],
+                    "enum": ["open", "merged", "closed", "draft", null],
+                    "default": null,
+                    "description": "PR state at last sync"
+                  },
+                  "merged_sha": {
+                    "type": ["string", "null"],
+                    "pattern": "^[0-9a-f]{7,40}$",
+                    "default": null,
+                    "description": "Merge commit SHA if state=merged"
+                  },
+                  "review_decision": {
+                    "type": ["string", "null"],
+                    "enum": ["approved", "changes_requested", "review_required", "commented", null],
+                    "default": null,
+                    "description": "Aggregated review decision if available"
+                  },
+                  "last_synced": {
+                    "type": ["string", "null"],
+                    "format": "date-time",
+                    "default": null,
+                    "description": "When /tc sync last refreshed this PR block"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "release_tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Release tags (e.g., 'v1.2.0') known to contain the linked commits"
+        }
+      },
+      "additionalProperties": false
     },
     "metadata": {
       "type": "object",

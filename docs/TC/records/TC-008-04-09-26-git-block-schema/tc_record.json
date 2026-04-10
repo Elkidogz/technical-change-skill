@@ -1,0 +1,487 @@
+{
+  "tc_id": "TC-008-04-09-26-git-block-schema",
+  "parent_tc": null,
+  "title": "Add optional git block to TC record schema",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-04-09T10:00:00-04:00",
+  "updated": "2026-04-09T20:38:38.407282-04:00",
+  "created_by": "ai:claude-opus-4-6",
+  "project": "technical-change-skill",
+  "description": {
+    "summary": "Extend the tc_record schema with an optional `git` block capturing commit SHAs, branch info, remotes, and PR metadata. Foundation for all subsequent git integration work (TC-009 through TC-016).",
+    "motivation": "The TC system was entirely VCS-agnostic, with /tc retro --from-git as the sole git touchpoint. To enable commit-level linking, auto-link hooks, PR enrichment, and git-aware dashboards, records must carry git metadata. Designed as an optional top-level object so the 7 existing TCs remain valid with zero migration.",
+    "scope": "feature",
+    "detailed_design": "Added top-level `git` property to tc_record.schema.json: { repo_root, initial_branch, commits[], remotes[], release_tags[] }. Each commit entry is append-only with {sha, short_sha, author, authored_date, subject, branch, parent_count, files_changed[], linked_at, link_source}. Each remote has optional nested pr object with {number, url, state, merged_sha, review_decision, last_synced}. Validator enforces SHA regex ^[0-9a-f]{7,40}$, deduplicates SHAs within a record, and validates provider enum (github|gitlab|bitbucket|other) and PR state enum (open|merged|closed|draft). Backward compatible: absent/null git block passes validation.",
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "schemas/tc_record.schema.json",
+      "action": "modified",
+      "description": "Added optional top-level `git` object with commits, remotes, and PR metadata",
+      "lines_added": 149,
+      "lines_removed": 0
+    },
+    {
+      "path": "validators/validate_tc.py",
+      "action": "modified",
+      "description": "Added _validate_git_block() function, SHA regex constants, provider/link_source/PR state enums, and wired into validate_tc_record()",
+      "lines_added": 130,
+      "lines_removed": 0
+    },
+    {
+      "path": ".npmignore",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "README.md",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "SKILL.md",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "bin/tc-skill.js",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/index.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-001-04-03-26-initial-skill-implementation/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-002-04-03-26-first-use-auto-detect/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-004-04-05-26-npm-package/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-004-04-05-26-npm-package/tc_record.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.html",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/screenshots/dashboard.png",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/screenshots/tc-record.png",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "docs/TC/tc_registry.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "generators/generate_retro_from_git.py",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "package.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-04-09T10:00:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "TC created: add optional git block to tc_record schema as foundation for git integration (Phase 1 of 8-TC plan).",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-04-09T10:15:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "Started implementation: began editing tc_record.schema.json.",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Schema work begun"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-04-09T10:30:00-04:00",
+      "author": "ai:claude-opus-4-6",
+      "summary": "Schema and validator updates complete. All 7 existing TCs still validate. Seven positive/negative test cases on _validate_git_block pass (None, empty, full valid, bad SHA, duplicate SHA, bad provider, bad PR state).",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Schema + validator code written, backward compat verified, unit cases pass"
+        }
+      ]
+    },
+    {
+      "revision_id": "R4",
+      "timestamp": "2026-04-09T20:38:38.407282-04:00",
+      "author": "tc-git-link",
+      "summary": "Linked 1 commit(s) via /tc link: 7da0099",
+      "field_changes": [
+        {
+          "field": "git.commits",
+          "action": "added",
+          "new_value": "1 commit(s)"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Existing TCs remain valid after schema extension",
+      "procedure": [
+        "Run `python validators/validate_tc.py docs/TC/records/TC-NNN-*/tc_record.json` for all 7 pre-existing TCs",
+        "Confirm each prints 'VALID' with exit code 0"
+      ],
+      "expected_result": "All 7 existing TC records pass validation with no errors (backward compatibility preserved — git block is optional)",
+      "actual_result": "All 7 printed VALID: TC-001 through TC-007 inclusive",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Validator output for all 7 existing TCs",
+          "content": "=== TC-001 === VALID\n=== TC-002 === VALID\n=== TC-003 === VALID\n=== TC-004 === VALID\n=== TC-005 === VALID\n=== TC-006 === VALID\n=== TC-007 === VALID"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:25:00-04:00"
+    },
+    {
+      "test_id": "T2",
+      "title": "_validate_git_block accepts None and empty dict",
+      "procedure": [
+        "Call _validate_git_block(None) — should return []",
+        "Call _validate_git_block({}) — should return [] (all subfields optional)"
+      ],
+      "expected_result": "Both calls return empty error lists; no exceptions raised",
+      "actual_result": "Case 1 (None): PASS; Case 2 (empty): PASS",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Python inline test results",
+          "content": "Case 1 (None): PASS\nCase 2 (empty): PASS"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:27:00-04:00"
+    },
+    {
+      "test_id": "T3",
+      "title": "_validate_git_block accepts a fully populated valid block",
+      "procedure": [
+        "Construct a git dict with repo_root, initial_branch, one commit, one remote with a PR, and release_tags",
+        "Call _validate_git_block(git)",
+        "Expect empty error list"
+      ],
+      "expected_result": "Fully populated valid block returns no errors",
+      "actual_result": "Case 3 (valid full): PASS",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Python inline test",
+          "content": "Case 3 (valid full): PASS"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:27:00-04:00"
+    },
+    {
+      "test_id": "T4",
+      "title": "_validate_git_block rejects malformed SHA",
+      "procedure": [
+        "Build a commit entry with sha='notasha'",
+        "Call _validate_git_block — expect error mentioning 'sha'"
+      ],
+      "expected_result": "Validator emits error about SHA format (regex ^[0-9a-f]{7,40}$)",
+      "actual_result": "Case 4 (bad SHA): PASS",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Python inline test",
+          "content": "Case 4 (bad SHA): PASS"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:27:00-04:00"
+    },
+    {
+      "test_id": "T5",
+      "title": "_validate_git_block detects duplicate SHAs within a record",
+      "procedure": [
+        "Build git.commits with two entries sharing sha='abc1234'",
+        "Call _validate_git_block — expect 'duplicated' error"
+      ],
+      "expected_result": "Validator rejects duplicate SHAs (preserves 1 TC ↔ 1 commit linkage invariant)",
+      "actual_result": "Case 5 (dup SHA): PASS",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Python inline test",
+          "content": "Case 5 (dup SHA): PASS"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:27:00-04:00"
+    },
+    {
+      "test_id": "T6",
+      "title": "_validate_git_block rejects unknown provider and PR state",
+      "procedure": [
+        "Build remotes with provider='gitea' (not in enum)",
+        "Build pr with state='reopened' (not in enum)",
+        "Call _validate_git_block for each — expect errors"
+      ],
+      "expected_result": "Validator emits enum errors for both provider and PR state",
+      "actual_result": "Case 6 (bad provider): PASS; Case 7 (bad PR state): PASS",
+      "status": "pass",
+      "evidence": [
+        {
+          "type": "command_output",
+          "description": "Python inline test",
+          "content": "Case 6 (bad provider): PASS\nCase 7 (bad PR state): PASS"
+        }
+      ],
+      "tested_by": "ai:claude-opus-4-6",
+      "tested_date": "2026-04-09T10:27:00-04:00"
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "full"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "git-integration-plan-2026-04-09",
+      "platform": "claude_code",
+      "model": "claude-opus-4-6",
+      "started": "2026-04-09T09:00:00-04:00",
+      "last_active": "2026-04-09T10:30:00-04:00"
+    },
+    "handoff": {
+      "progress_summary": "TC-008 complete: schema extended with optional git block, validator updated with _validate_git_block(), all 7 existing TCs still validate, 7 positive/negative test cases on the new validator pass. Foundation ready for TC-009 onward.",
+      "next_steps": [
+        "TC-009: implement generators/tc_git_link.py (/tc link command) and tc_git_status.py (/tc git status)",
+        "TC-010: post-commit auto-link hook script and settings template",
+        "TC-011: registry 3-way merge driver",
+        "TC-012: pre-commit advisory hook",
+        "TC-013: session lifecycle hooks (SessionStart, Stop, PreCompact)",
+        "TC-014: online /tc pr link and /tc sync (gh/glab, opt-in)",
+        "TC-015: dashboard + per-TC HTML git rendering with CSS-only badges",
+        "TC-016: SKILL.md, README.md, init/ updates"
+      ],
+      "blockers": [],
+      "key_context": [
+        "User confirmed: default offline, online features opt-in",
+        "All generators must stay Python stdlib only",
+        "HTML must remain CSS-only (WCAG AA+, rem fonts, dark theme)",
+        "Cross-agent compat: no subagent-only features — Cursor/Codex/Gemini users must have equivalent path",
+        "Revision history is append-only; git.commits[] follows the same rule",
+        "SHA dedup enforced at validator level"
+      ],
+      "files_in_progress": [],
+      "decisions_made": [
+        {
+          "decision": "Git block is top-level optional object, not nested inside metadata",
+          "rationale": "Top-level placement lets /tc git status and HTML generators find it without digging, and matches the precedent of files_affected[] and session_context being siblings of metadata.",
+          "timestamp": "2026-04-09T10:10:00-04:00"
+        },
+        {
+          "decision": "Enforce SHA uniqueness within git.commits[] at validator level",
+          "rationale": "Prevents accidental double-linking from auto-hook + manual /tc link. Duplicate detection is cheap (set) and the error message is clearer than catching it downstream.",
+          "timestamp": "2026-04-09T10:20:00-04:00"
+        },
+        {
+          "decision": "PR block is nested under remotes[], not top-level git.pr",
+          "rationale": "A TC could theoretically span forks or mirror remotes. Nesting PR under the remote keeps the data model correct if that ever happens, and degrades cleanly to a single origin remote in the common case.",
+          "timestamp": "2026-04-09T10:22:00-04:00"
+        }
+      ]
+    },
+    "session_history": []
+  },
+  "tags": [
+    "schema",
+    "git",
+    "foundation",
+    "phase-1"
+  ],
+  "related_tcs": [],
+  "notes": "Part of the 9-TC git integration initiative. TC-008 is the schema foundation; TC-009 through TC-016 build commands, hooks, merge drivers, online PR sync, and dashboards on top of this block. Decision log: user confirmed default-offline with online as opt-in feature, so all downstream TCs must degrade gracefully if gh/glab unavailable and never assume network.",
+  "metadata": {
+    "project": "technical-change-skill",
+    "created_by": "ai:claude-opus-4-6",
+    "last_modified_by": "tc-git-link",
+    "last_modified": "2026-04-09T20:38:38.407282-04:00",
+    "estimated_effort": "small"
+  },
+  "git": {
+    "repo_root": "../../../..",
+    "initial_branch": "main",
+    "commits": [
+      {
+        "sha": "7da0099b39c3fefa81c08863375bd1a609075055",
+        "short_sha": "7da0099",
+        "author": "Elkidogz",
+        "authored_date": "2026-04-07T16:00:51-04:00",
+        "subject": "Add npm package, retro --from-git, screenshots, and cross-agent install docs",
+        "branch": "main",
+        "parent_count": 1,
+        "files_changed": [
+          ".npmignore",
+          "README.md",
+          "SKILL.md",
+          "bin/tc-skill.js",
+          "docs/TC/index.html",
+          "docs/TC/records/TC-001-04-03-26-initial-skill-implementation/tc_record.html",
+          "docs/TC/records/TC-002-04-03-26-first-use-auto-detect/tc_record.html",
+          "docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.html",
+          "docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.json",
+          "docs/TC/records/TC-004-04-05-26-npm-package/tc_record.html",
+          "docs/TC/records/TC-004-04-05-26-npm-package/tc_record.json",
+          "docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.html",
+          "docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.json",
+          "docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.html",
+          "docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.json",
+          "docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.html",
+          "docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.json",
+          "docs/TC/screenshots/dashboard.png",
+          "docs/TC/screenshots/tc-record.png",
+          "docs/TC/tc_registry.json",
+          "generators/generate_retro_from_git.py",
+          "package.json"
+        ],
+        "linked_at": "2026-04-09T20:38:38.407282-04:00",
+        "link_source": "manual"
+      }
+    ],
+    "remotes": [],
+    "release_tags": []
+  }
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TC-003-04-05-26-demo-screenshot-readme — Demo Screenshot and Hero Image for README</title>
+  <title>TC-008-04-09-26-git-block-schema — Add optional git block to TC record schema</title>
   <!-- CSS is inlined by the generator for file:// compatibility -->
   <style>/* ============================================================
    TC Styles — Accessible Dark Theme
@@ -901,14 +901,14 @@ tbody tr:hover {
 
     <!-- Header -->
     <header class="tc-header" aria-label="TC Record Header">
-      <h1>TC-003-04-05-26-demo-screenshot-readme</h1>
+      <h1>TC-008-04-09-26-git-block-schema</h1>
       <div class="subtitle">
-        <span>Demo Screenshot and Hero Image for README</span>
+        <span>Add optional git block to TC record schema</span>
         <span aria-hidden="true">&bull;</span>
         <span>technical-change-skill</span>
         <span role="status" class="badge badge-implemented">Implemented</span>
-        <span class="badge badge-documentation">documentation</span>
-        <span class="badge badge-medium">medium</span>
+        <span class="badge badge-feature">feature</span>
+        <span class="badge badge-high">high</span>
       </div>
     </header>
 
@@ -926,12 +926,12 @@ tbody tr:hover {
 
     <!-- Stats Grid -->
     <div class="stats-grid" aria-label="TC Statistics">
-      <div class="stat-card"><span class="stat-value">3</span><span class="stat-label">Files Affected</span></div>
-<div class="stat-card"><span class="stat-value">0/0</span><span class="stat-label">Tests Passing</span></div>
-<div class="stat-card"><span class="stat-value">2</span><span class="stat-label">Revisions</span></div>
+      <div class="stat-card"><span class="stat-value">24</span><span class="stat-label">Files Affected</span></div>
+<div class="stat-card"><span class="stat-value">6/6</span><span class="stat-label">Tests Passing</span></div>
+<div class="stat-card"><span class="stat-value">4</span><span class="stat-label">Revisions</span></div>
 <div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Sessions</span></div>
 <div class="stat-card"><span class="stat-value">0</span><span class="stat-label">Sub-TCs</span></div>
-<div class="stat-card"><span class="stat-value">Medium</span><span class="stat-label">Priority</span></div>
+<div class="stat-card"><span class="stat-value">High</span><span class="stat-label">Priority</span></div>
     </div>
 
     <!-- Main Content -->
@@ -942,39 +942,53 @@ tbody tr:hover {
         <h2>Overview</h2>
         <div class="card">
 <h3>Summary</h3>
-<p>Add demo screenshots of the TC dashboard and individual TC record HTML pages to the README for visual impact in registry PR reviews</p>
+<p>Extend the tc_record schema with an optional `git` block capturing commit SHAs, branch info, remotes, and PR metadata. Foundation for all subsequent git integration work (TC-009 through TC-016).</p>
 </div>
 <div class="card">
 <h3>Motivation</h3>
-<p>The 6 open PRs across skill registries lack visual proof of what the skill produces. A hero image showing the dark-theme dashboard and a TC record page would make the PRs significantly more compelling and help drive adoption.</p>
+<p>The TC system was entirely VCS-agnostic, with /tc retro --from-git as the sole git touchpoint. To enable commit-level linking, auto-link hooks, PR enrichment, and git-aware dashboards, records must carry git metadata. Designed as an optional top-level object so the 7 existing TCs remain valid with zero migration.</p>
 </div>
 <div class="card">
 <h3>Detailed Design</h3>
-<p>Generate fresh example data with multiple TCs in various states, capture screenshots of the dashboard and a TC record page, add to README with descriptive alt text. Consider a single composite hero image or 2-3 focused screenshots.</p>
+<p>Added top-level `git` property to tc_record.schema.json: { repo_root, initial_branch, commits[], remotes[], release_tags[] }. Each commit entry is append-only with {sha, short_sha, author, authored_date, subject, branch, parent_count, files_changed[], linked_at, link_source}. Each remote has optional nested pr object with {number, url, state, merged_sha, review_decision, last_synced}. Validator enforces SHA regex ^[0-9a-f]{7,40}$, deduplicates SHAs within a record, and validates provider enum (github|gitlab|bitbucket|other) and PR state enum (open|merged|closed|draft). Backward compatible: absent/null git block passes validation.</p>
 </div>
 <div class="card">
 <h3>Metadata</h3>
 <div class="session-info">
-<div class="session-field"><div class="field-label">Created</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
-<div class="session-field"><div class="field-label">Updated</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Created</div><div class="field-value">2026-04-09 10:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Updated</div><div class="field-value">2026-04-09 20:38 UTC-04:00</div></div>
 <div class="session-field"><div class="field-label">Created By</div><div class="field-value">ai:claude-opus-4-6</div></div>
-<div class="session-field"><div class="field-label">Last Modified By</div><div class="field-value">ai:claude-opus-4-6</div></div>
-<div class="session-field"><div class="field-label">Effort</div><div class="field-value">—</div></div>
+<div class="session-field"><div class="field-label">Last Modified By</div><div class="field-value">tc-git-link</div></div>
+<div class="session-field"><div class="field-label">Effort</div><div class="field-value">Small</div></div>
 </div></div>
 <div class="card">
 <h3>Tags</h3>
 <div style="display:flex;flex-wrap:wrap;gap:var(--space-sm)">
-<span class="badge badge-enhancement">documentation</span>
-<span class="badge badge-enhancement">readme</span>
-<span class="badge badge-enhancement">screenshots</span>
-<span class="badge badge-enhancement">adoption</span>
+<span class="badge badge-enhancement">schema</span>
+<span class="badge badge-enhancement">git</span>
+<span class="badge badge-enhancement">foundation</span>
+<span class="badge badge-enhancement">phase-1</span>
 </div></div>
+<div class="card">
+<h3>Notes</h3>
+<p>Part of the 9-TC git integration initiative. TC-008 is the schema foundation; TC-009 through TC-016 build commands, hooks, merge drivers, online PR sync, and dashboards on top of this block. Decision log: user confirmed default-offline with online as opt-in feature, so all downstream TCs must degrade gracefully if gh/glab unavailable and never assume network.</p>
+</div>
       </section>
 
       <!-- Git Activity Section -->
       <section id="git" aria-label="Git Activity">
         <h2>Git Activity</h2>
-        <div class="empty-state"><p>No git data linked. Use /tc link to connect commits.</p></div>
+        <div class="card">
+<div class="session-info">
+<div class="session-field"><div class="field-label">Branch</div><div class="field-value"><code>main</code></div></div>
+<div class="session-field"><div class="field-label">Linked Commits</div><div class="field-value">1</div></div>
+</div></div>
+<div class="table-wrap"><table>
+<thead><tr>
+<th>SHA</th><th>Subject</th><th>Author</th><th>Date</th><th>Source</th>
+</tr></thead><tbody>
+<tr><td><code>7da0099</code></td><td>Add npm package, retro --from-git, screenshots, and cross-agent instal</td><td>Elkidogz</td><td>2026-04-07 16:00 UTC-04:00</td><td><span class="badge badge-feature" style="font-size:0.7rem">manual</span></td></tr>
+</tbody></table></div>
       </section>
 
       <!-- Files Affected Section -->
@@ -984,9 +998,30 @@ tbody tr:hover {
 <thead><tr>
 <th>File</th><th>Action</th><th>Description</th><th>+/-</th>
 </tr></thead><tbody>
-<tr><td><code>docs/TC/screenshots/dashboard.png</code></td><td><span class="badge badge-feature">created</span></td><td>Full-page dashboard screenshot captured via Playwright</td><td><span class="new-value">+0</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>docs/TC/screenshots/tc-record.png</code></td><td><span class="badge badge-feature">created</span></td><td>Full-page TC record detail screenshot captured via Playwright</td><td><span class="new-value">+0</span> / <span class="old-value">-0</span></td></tr>
-<tr><td><code>README.md</code></td><td><span class="badge badge-refactor">modified</span></td><td>Added hero images with alt text after title</td><td><span class="new-value">+5</span> / <span class="old-value">-0</span></td></tr>
+<tr><td><code>schemas/tc_record.schema.json</code></td><td><span class="badge badge-refactor">modified</span></td><td>Added optional top-level `git` object with commits, remotes, and PR metadata</td><td><span class="new-value">+149</span> / <span class="old-value">-0</span></td></tr>
+<tr><td><code>validators/validate_tc.py</code></td><td><span class="badge badge-refactor">modified</span></td><td>Added _validate_git_block() function, SHA regex constants, provider/link_source/PR state enums, and wired into validate_tc_record()</td><td><span class="new-value">+130</span> / <span class="old-value">-0</span></td></tr>
+<tr><td><code>.npmignore</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>README.md</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>SKILL.md</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>bin/tc-skill.js</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/index.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-001-04-03-26-initial-skill-implementation/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-002-04-03-26-first-use-auto-detect/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-003-04-05-26-demo-screenshot-readme/tc_record.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-004-04-05-26-npm-package/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-004-04-05-26-npm-package/tc_record.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-005-04-05-26-retro-from-git/tc_record.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-006-04-05-26-cross-agent-compat/tc_record.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.html</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/screenshots/dashboard.png</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/screenshots/tc-record.png</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>docs/TC/tc_registry.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>generators/generate_retro_from_git.py</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
+<tr><td><code>package.json</code></td><td><span class="badge badge-refactor">modified</span></td><td><span class="dim">—</span></td><td>—</td></tr>
 </tbody></table></div>
       </section>
 
@@ -995,21 +1030,37 @@ tbody tr:hover {
         <h2>Revision History</h2>
         <div class="timeline">
 <div class="timeline-item">
-<span class="revision-id">R2</span> <span class="revision-meta">2026-04-05 22:00 UTC-04:00 by ai:claude-opus-4-6</span>
-<div class="revision-summary">Captured dashboard and TC record screenshots via Playwright, added to README with descriptive alt text</div>
+<span class="revision-id">R4</span> <span class="revision-meta">2026-04-09 20:38 UTC-04:00 by tc-git-link</span>
+<div class="revision-summary">Linked 1 commit(s) via /tc link: 7da0099</div>
 <div class="field-change">
-<span class="field-name">status</span> 
-<span class="old-value">planned</span> &rarr; <span class="new-value">implemented</span>
-<br><small style="color:var(--dim)">Reason: Screenshots captured and README updated</small>
+<span class="field-name">git.commits</span> 
+<span class="new-value">+ 1 commit(s)</span>
 </div>
 </div>
 <div class="timeline-item">
-<span class="revision-id">R1</span> <span class="revision-meta">2026-04-05 21:30 UTC-04:00 by ai:claude-opus-4-6</span>
-<div class="revision-summary">TC created — demo screenshots needed to strengthen registry PR submissions</div>
+<span class="revision-id">R3</span> <span class="revision-meta">2026-04-09 10:30 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">Schema and validator updates complete. All 7 existing TCs still validate. Seven positive/negative test cases on _validate_git_block pass (None, empty, full valid, bad SHA, duplicate SHA, bad provider, bad PR state).</div>
+<div class="field-change">
+<span class="field-name">status</span> 
+<span class="old-value">in_progress</span> &rarr; <span class="new-value">implemented</span>
+<br><small style="color:var(--dim)">Reason: Schema + validator code written, backward compat verified, unit cases pass</small>
+</div>
+</div>
+<div class="timeline-item">
+<span class="revision-id">R2</span> <span class="revision-meta">2026-04-09 10:15 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">Started implementation: began editing tc_record.schema.json.</div>
+<div class="field-change">
+<span class="field-name">status</span> 
+<span class="old-value">planned</span> &rarr; <span class="new-value">in_progress</span>
+<br><small style="color:var(--dim)">Reason: Schema work begun</small>
+</div>
+</div>
+<div class="timeline-item">
+<span class="revision-id">R1</span> <span class="revision-meta">2026-04-09 10:00 UTC-04:00 by ai:claude-opus-4-6</span>
+<div class="revision-summary">TC created: add optional git block to tc_record schema as foundation for git integration (Phase 1 of 8-TC plan).</div>
 <div class="field-change">
 <span class="field-name">status</span> 
 set to <span class="new-value">planned</span>
-<br><small style="color:var(--dim)">Reason: Initial TC creation</small>
 </div>
 </div>
 </div>
@@ -1024,7 +1075,154 @@ set to <span class="new-value">planned</span>
       <!-- Test Cases Section -->
       <section id="tests" aria-label="Test Cases">
         <h2>Test Cases</h2>
-        <div class="empty-state"><p>No test cases defined yet.</p></div>
+        <div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T1</span> <span class="test-title">Existing TCs remain valid after schema extension</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Run `python validators/validate_tc.py docs/TC/records/TC-NNN-*/tc_record.json` for all 7 pre-existing TCs</li>
+<li>Confirm each prints &#x27;VALID&#x27; with exit code 0</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">All 7 existing TC records pass validation with no errors (backward compatibility preserved — git block is optional)</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">All 7 printed VALID: TC-001 through TC-007 inclusive</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Validator output for all 7 existing TCs
+<div class="code-block">=== TC-001 === VALID
+=== TC-002 === VALID
+=== TC-003 === VALID
+=== TC-004 === VALID
+=== TC-005 === VALID
+=== TC-006 === VALID
+=== TC-007 === VALID</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:25 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T2</span> <span class="test-title">_validate_git_block accepts None and empty dict</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Call _validate_git_block(None) — should return []</li>
+<li>Call _validate_git_block({}) — should return [] (all subfields optional)</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">Both calls return empty error lists; no exceptions raised</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Case 1 (None): PASS; Case 2 (empty): PASS</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Python inline test results
+<div class="code-block">Case 1 (None): PASS
+Case 2 (empty): PASS</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:27 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T3</span> <span class="test-title">_validate_git_block accepts a fully populated valid block</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Construct a git dict with repo_root, initial_branch, one commit, one remote with a PR, and release_tags</li>
+<li>Call _validate_git_block(git)</li>
+<li>Expect empty error list</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">Fully populated valid block returns no errors</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Case 3 (valid full): PASS</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Python inline test
+<div class="code-block">Case 3 (valid full): PASS</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:27 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T4</span> <span class="test-title">_validate_git_block rejects malformed SHA</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Build a commit entry with sha=&#x27;notasha&#x27;</li>
+<li>Call _validate_git_block — expect error mentioning &#x27;sha&#x27;</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">Validator emits error about SHA format (regex ^[0-9a-f]{7,40}$)</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Case 4 (bad SHA): PASS</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Python inline test
+<div class="code-block">Case 4 (bad SHA): PASS</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:27 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T5</span> <span class="test-title">_validate_git_block detects duplicate SHAs within a record</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Build git.commits with two entries sharing sha=&#x27;abc1234&#x27;</li>
+<li>Call _validate_git_block — expect &#x27;duplicated&#x27; error</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">Validator rejects duplicate SHAs (preserves 1 TC ↔ 1 commit linkage invariant)</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Case 5 (dup SHA): PASS</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Python inline test
+<div class="code-block">Case 5 (dup SHA): PASS</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:27 UTC-04:00
+</div>
+</div>
+<div class="test-case">
+<div class="test-header">
+<div><span class="test-id">T6</span> <span class="test-title">_validate_git_block rejects unknown provider and PR state</span></div><span class="badge badge-pass">PASS</span>
+</div>
+<div class="result-label">Procedure</div>
+<ol class="procedure-steps">
+<li>Build remotes with provider=&#x27;gitea&#x27; (not in enum)</li>
+<li>Build pr with state=&#x27;reopened&#x27; (not in enum)</li>
+<li>Call _validate_git_block for each — expect errors</li>
+</ol>
+<div class="result-label">Expected Result</div>
+<div class="result-value">Validator emits enum errors for both provider and PR state</div>
+<div class="result-label">Actual Result</div>
+<div class="result-value">Case 6 (bad provider): PASS; Case 7 (bad PR state): PASS</div>
+<div class="result-label">Evidence</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<span class="badge badge-infrastructure">command_output</span> Python inline test
+<div class="code-block">Case 6 (bad provider): PASS
+Case 7 (bad PR state): PASS</div>
+</div>
+<div class="card-meta" style="margin-top:var(--space-sm)">
+Tested by: ai:claude-opus-4-6
+ on 2026-04-09 10:27 UTC-04:00
+</div>
+</div>
       </section>
 
       <!-- Session Context Section -->
@@ -1032,92 +1230,52 @@ set to <span class="new-value">planned</span>
         <h2>Session Context</h2>
         <h3>Current Session</h3>
 <div class="session-info">
-<div class="session-field"><div class="field-label">Session ID</div><div class="field-value">session-2026-04-05-tc-creation</div></div>
+<div class="session-field"><div class="field-label">Session ID</div><div class="field-value">git-integration-plan-2026-04-09</div></div>
 <div class="session-field"><div class="field-label">Platform</div><div class="field-value">claude_code</div></div>
 <div class="session-field"><div class="field-label">Model</div><div class="field-value">claude-opus-4-6</div></div>
-<div class="session-field"><div class="field-label">Started</div><div class="field-value">2026-04-05 21:00 UTC-04:00</div></div>
-<div class="session-field"><div class="field-label">Last Active</div><div class="field-value">2026-04-05 21:30 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Started</div><div class="field-value">2026-04-09 09:00 UTC-04:00</div></div>
+<div class="session-field"><div class="field-label">Last Active</div><div class="field-value">2026-04-09 10:30 UTC-04:00</div></div>
 </div>
 <div class="handoff-section">
 <h3>Handoff Data</h3>
 <div class="result-label">Progress Summary</div>
-<p class="result-value">TC created, no work started yet</p>
+<p class="result-value">TC-008 complete: schema extended with optional git block, validator updated with _validate_git_block(), all 7 existing TCs still validate, 7 positive/negative test cases on the new validator pass. Foundation ready for TC-009 onward.</p>
 <div class="result-label">Next Steps</div>
 <ul class="handoff-list">
-<li>1. Generate fresh example TC data with multiple states</li>
-<li>2. Capture dashboard screenshot</li>
-<li>3. Capture individual TC record screenshot</li>
-<li>4. Add images to README with alt text</li>
-<li>5. Update existing registry PRs with visual</li>
+<li>TC-009: implement generators/tc_git_link.py (/tc link command) and tc_git_status.py (/tc git status)</li>
+<li>TC-010: post-commit auto-link hook script and settings template</li>
+<li>TC-011: registry 3-way merge driver</li>
+<li>TC-012: pre-commit advisory hook</li>
+<li>TC-013: session lifecycle hooks (SessionStart, Stop, PreCompact)</li>
+<li>TC-014: online /tc pr link and /tc sync (gh/glab, opt-in)</li>
+<li>TC-015: dashboard + per-TC HTML git rendering with CSS-only badges</li>
+<li>TC-016: SKILL.md, README.md, init/ updates</li>
 </ul>
 <div class="result-label">Key Context</div>
 <ul class="handoff-list">
-<li>6</li>
-<li> </li>
-<li>P</li>
-<li>R</li>
-<li>s</li>
-<li> </li>
-<li>a</li>
-<li>r</li>
-<li>e</li>
-<li> </li>
-<li>o</li>
-<li>p</li>
-<li>e</li>
-<li>n</li>
-<li> </li>
-<li>a</li>
-<li>c</li>
-<li>r</li>
-<li>o</li>
-<li>s</li>
-<li>s</li>
-<li> </li>
-<li>r</li>
-<li>e</li>
-<li>g</li>
-<li>i</li>
-<li>s</li>
-<li>t</li>
-<li>r</li>
-<li>i</li>
-<li>e</li>
-<li>s</li>
-<li> </li>
-<li>—</li>
-<li> </li>
-<li>v</li>
-<li>i</li>
-<li>s</li>
-<li>u</li>
-<li>a</li>
-<li>l</li>
-<li>s</li>
-<li> </li>
-<li>w</li>
-<li>o</li>
-<li>u</li>
-<li>l</li>
-<li>d</li>
-<li> </li>
-<li>h</li>
-<li>e</li>
-<li>l</li>
-<li>p</li>
-<li> </li>
-<li>a</li>
-<li>l</li>
-<li>l</li>
-<li> </li>
-<li>o</li>
-<li>f</li>
-<li> </li>
-<li>t</li>
-<li>h</li>
-<li>e</li>
-<li>m</li>
+<li>User confirmed: default offline, online features opt-in</li>
+<li>All generators must stay Python stdlib only</li>
+<li>HTML must remain CSS-only (WCAG AA+, rem fonts, dark theme)</li>
+<li>Cross-agent compat: no subagent-only features — Cursor/Codex/Gemini users must have equivalent path</li>
+<li>Revision history is append-only; git.commits[] follows the same rule</li>
+<li>SHA dedup enforced at validator level</li>
 </ul>
+<div class="result-label">Decisions Made</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<strong>Git block is top-level optional object, not nested inside metadata</strong>
+<br><span style="color:var(--dim)">Top-level placement lets /tc git status and HTML generators find it without digging, and matches the precedent of files_affected[] and session_context being siblings of metadata.</span>
+<br><small style="color:var(--dim)">2026-04-09 10:10 UTC-04:00</small>
+</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<strong>Enforce SHA uniqueness within git.commits[] at validator level</strong>
+<br><span style="color:var(--dim)">Prevents accidental double-linking from auto-hook + manual /tc link. Duplicate detection is cheap (set) and the error message is clearer than catching it downstream.</span>
+<br><small style="color:var(--dim)">2026-04-09 10:20 UTC-04:00</small>
+</div>
+<div class="card" style="margin-bottom:var(--space-sm)">
+<strong>PR block is nested under remotes[], not top-level git.pr</strong>
+<br><span style="color:var(--dim)">A TC could theoretically span forks or mirror remotes. Nesting PR under the remote keeps the data model correct if that ever happens, and degrades cleanly to a single origin remote in the common case.</span>
+<br><small style="color:var(--dim)">2026-04-09 10:22 UTC-04:00</small>
+</div>
 </div>
       </section>
 
@@ -1128,7 +1286,7 @@ set to <span class="new-value">planned</span>
 <span style="font-size:var(--font-3xl)">&#10007;</span>
 <div>
 <strong style="font-size:var(--font-xl)">Not Yet Approved</strong>
-<br>Test Coverage: <span class="badge badge-none">NONE</span>
+<br>Test Coverage: <span class="badge badge-full">FULL</span>
 </div></div>
       </section>
 

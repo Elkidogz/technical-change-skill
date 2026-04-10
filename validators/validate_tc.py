@@ -26,15 +26,17 @@ from pathlib import Path
 # Constants
 # ---------------------------------------------------------------------------
 
-VALID_STATUSES = ("planned", "in_progress", "blocked", "implemented", "tested", "deployed")
+VALID_STATUSES = ("planned", "in_progress", "blocked", "implemented", "tested", "deployed", "paused", "voided")
 
 VALID_TRANSITIONS: dict[str, list[str]] = {
-    "planned":      ["in_progress", "blocked"],
-    "in_progress":  ["blocked", "implemented"],
-    "blocked":      ["in_progress", "planned"],
+    "planned":      ["in_progress", "blocked", "voided"],
+    "in_progress":  ["blocked", "implemented", "paused", "voided"],
+    "blocked":      ["in_progress", "planned", "paused", "voided"],
     "implemented":  ["tested", "in_progress"],
     "tested":       ["deployed", "in_progress"],
     "deployed":     ["in_progress"],
+    "paused":       ["in_progress", "voided"],
+    "voided":       [],
 }
 
 VALID_SCOPES = ("feature", "bugfix", "refactor", "infrastructure", "documentation", "hotfix", "enhancement")
@@ -47,6 +49,13 @@ VALID_PLATFORMS = ("claude_code", "claude_web", "api", "other")
 VALID_EFFORTS = ("trivial", "small", "medium", "large", "epic", None)
 VALID_COVERAGE = ("none", "partial", "full")
 VALID_FILE_IN_PROGRESS_STATES = ("editing", "needs_review", "partially_done", "ready")
+VALID_GIT_LINK_SOURCES = ("auto-hook", "manual", "retro")
+VALID_GIT_PROVIDERS = ("github", "gitlab", "bitbucket", "other")
+VALID_PR_STATES = ("open", "merged", "closed", "draft", None)
+VALID_REVIEW_DECISIONS = ("approved", "changes_requested", "review_required", "commented", None)
+
+GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{7,40}$")
+GIT_SHORT_SHA_PATTERN = re.compile(r"^[0-9a-f]{7,12}$")
 
 TC_ID_PATTERN = re.compile(r"^TC-\d{3}-\d{2}-\d{2}-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$")
 SUB_TC_PATTERN = re.compile(r"^TC-\d{3}\.[A-Z](\.\d+)?$")
@@ -164,6 +173,127 @@ def _check_array(value, field_name: str) -> list[str]:
     if not isinstance(value, list):
         return [f"Field '{field_name}' must be an array, got {type(value).__name__}"]
     return []
+
+
+def _validate_git_block(git: dict) -> list[str]:
+    """Validate the optional `git` block on a TC record.
+
+    The block is entirely optional (None/absent = valid). When present, every
+    commit entry and remote entry must conform to its sub-schema. Never modifies
+    past commit entries (append-only is enforced by callers, not here).
+    """
+    errors: list[str] = []
+
+    if git is None:
+        return errors
+    if not isinstance(git, dict):
+        return [f"Field 'git' must be an object or null, got {type(git).__name__}"]
+
+    # repo_root: optional string or null
+    if "repo_root" in git and git["repo_root"] is not None:
+        errors.extend(_check_string(git["repo_root"], "git.repo_root", min_length=1))
+
+    # initial_branch: optional string or null
+    if "initial_branch" in git and git["initial_branch"] is not None:
+        errors.extend(_check_string(git["initial_branch"], "git.initial_branch", min_length=1))
+
+    # commits: optional array, each entry strictly validated
+    if "commits" in git:
+        commits = git["commits"]
+        errors.extend(_check_array(commits, "git.commits"))
+        if isinstance(commits, list):
+            seen_shas: set[str] = set()
+            for i, c in enumerate(commits):
+                prefix = f"git.commits[{i}]"
+                if not isinstance(c, dict):
+                    errors.append(f"{prefix} must be an object")
+                    continue
+                errors.extend(_check_required_fields(
+                    c,
+                    ["sha", "short_sha", "author", "authored_date", "subject", "parent_count", "linked_at", "link_source"],
+                    prefix,
+                ))
+                if "sha" in c:
+                    sha = c["sha"]
+                    if not isinstance(sha, str) or not GIT_SHA_PATTERN.match(sha):
+                        errors.append(f"{prefix}.sha must be a 7-40 char hex string, got '{sha}'")
+                    elif sha in seen_shas:
+                        errors.append(f"{prefix}.sha '{sha}' is duplicated in git.commits (must be unique)")
+                    else:
+                        seen_shas.add(sha)
+                if "short_sha" in c:
+                    ssha = c["short_sha"]
+                    if not isinstance(ssha, str) or not GIT_SHORT_SHA_PATTERN.match(ssha):
+                        errors.append(f"{prefix}.short_sha must be a 7-12 char hex string, got '{ssha}'")
+                if "author" in c:
+                    errors.extend(_check_string(c["author"], f"{prefix}.author", min_length=1))
+                if "authored_date" in c:
+                    errors.extend(_check_iso_datetime(c["authored_date"], f"{prefix}.authored_date"))
+                if "subject" in c:
+                    errors.extend(_check_string(c["subject"], f"{prefix}.subject", min_length=1))
+                if "branch" in c and c["branch"] is not None:
+                    errors.extend(_check_string(c["branch"], f"{prefix}.branch", min_length=1))
+                if "parent_count" in c:
+                    pc = c["parent_count"]
+                    if not isinstance(pc, int) or pc < 0:
+                        errors.append(f"{prefix}.parent_count must be a non-negative integer, got {pc}")
+                if "files_changed" in c:
+                    errors.extend(_check_array(c["files_changed"], f"{prefix}.files_changed"))
+                if "linked_at" in c:
+                    errors.extend(_check_iso_datetime(c["linked_at"], f"{prefix}.linked_at"))
+                if "link_source" in c:
+                    errors.extend(_check_enum(c["link_source"], VALID_GIT_LINK_SOURCES, f"{prefix}.link_source"))
+
+    # remotes: optional array of {name, url, provider, pr?}
+    if "remotes" in git:
+        remotes = git["remotes"]
+        errors.extend(_check_array(remotes, "git.remotes"))
+        if isinstance(remotes, list):
+            for i, r in enumerate(remotes):
+                prefix = f"git.remotes[{i}]"
+                if not isinstance(r, dict):
+                    errors.append(f"{prefix} must be an object")
+                    continue
+                errors.extend(_check_required_fields(r, ["name", "url", "provider"], prefix))
+                if "name" in r:
+                    errors.extend(_check_string(r["name"], f"{prefix}.name", min_length=1))
+                if "url" in r:
+                    errors.extend(_check_string(r["url"], f"{prefix}.url", min_length=1))
+                if "provider" in r:
+                    errors.extend(_check_enum(r["provider"], VALID_GIT_PROVIDERS, f"{prefix}.provider"))
+                if "pr" in r and r["pr"] is not None:
+                    pr = r["pr"]
+                    pr_prefix = f"{prefix}.pr"
+                    if not isinstance(pr, dict):
+                        errors.append(f"{pr_prefix} must be an object or null")
+                    else:
+                        if "number" in pr and pr["number"] is not None:
+                            if not isinstance(pr["number"], int) or pr["number"] < 1:
+                                errors.append(f"{pr_prefix}.number must be a positive integer, got {pr['number']}")
+                        if "url" in pr and pr["url"] is not None:
+                            errors.extend(_check_string(pr["url"], f"{pr_prefix}.url", min_length=1))
+                        if "state" in pr and pr["state"] not in VALID_PR_STATES:
+                            errors.append(
+                                f"{pr_prefix}.state invalid: '{pr['state']}'. "
+                                f"Must be one of: {', '.join(str(s) for s in VALID_PR_STATES)}"
+                            )
+                        if "merged_sha" in pr and pr["merged_sha"] is not None:
+                            msha = pr["merged_sha"]
+                            if not isinstance(msha, str) or not GIT_SHA_PATTERN.match(msha):
+                                errors.append(f"{pr_prefix}.merged_sha must be a 7-40 char hex string, got '{msha}'")
+                        if "review_decision" in pr and pr["review_decision"] not in VALID_REVIEW_DECISIONS:
+                            errors.append(
+                                f"{pr_prefix}.review_decision invalid: '{pr['review_decision']}'. "
+                                f"Must be one of: {', '.join(str(s) for s in VALID_REVIEW_DECISIONS)}"
+                            )
+                        if "last_synced" in pr and pr["last_synced"] is not None:
+                            errors.extend(_check_iso_datetime(pr["last_synced"], f"{pr_prefix}.last_synced"))
+
+    # release_tags: optional array of strings
+    if "release_tags" in git:
+        errors.extend(_check_array(git["release_tags"], "git.release_tags"))
+
+    return errors
 
 
 def validate_tc_record(record: dict) -> list[str]:
@@ -397,6 +527,10 @@ def validate_tc_record(record: dict) -> list[str]:
                             errors.extend(_check_required_fields(fip, ["path", "state"], fip_prefix))
                             if "state" in fip:
                                 errors.extend(_check_enum(fip["state"], VALID_FILE_IN_PROGRESS_STATES, f"{fip_prefix}.state"))
+
+    # --- git (optional block) ---
+    if "git" in record:
+        errors.extend(_validate_git_block(record["git"]))
 
     # --- metadata ---
     if "metadata" in record:

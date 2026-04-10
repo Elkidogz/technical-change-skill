@@ -500,6 +500,183 @@ def build_session(record: dict) -> str:
     return "\n".join(parts)
 
 
+def build_git_section(record: dict) -> str:
+    """Build the Git Activity section showing commits, branch, and PR info."""
+    git = record.get("git")
+    if not git or not isinstance(git, dict):
+        return '<div class="empty-state"><p>No git data linked. Use /tc link to connect commits.</p></div>'
+
+    parts: list[str] = []
+    branch = git.get("initial_branch")
+    commits = git.get("commits", [])
+    remotes = git.get("remotes", [])
+    tags = git.get("release_tags", [])
+
+    # Branch + summary info bar
+    parts.append('<div class="card">')
+    parts.append('<div class="session-info">')
+    if branch:
+        parts.append(
+            f'<div class="session-field">'
+            f'<div class="field-label">Branch</div>'
+            f'<div class="field-value"><code>{_esc(branch)}</code></div>'
+            f'</div>'
+        )
+    parts.append(
+        f'<div class="session-field">'
+        f'<div class="field-label">Linked Commits</div>'
+        f'<div class="field-value">{len(commits)}</div>'
+        f'</div>'
+    )
+    if tags:
+        parts.append(
+            f'<div class="session-field">'
+            f'<div class="field-label">Release Tags</div>'
+            f'<div class="field-value">{", ".join(_esc(t) for t in tags)}</div>'
+            f'</div>'
+        )
+    parts.append('</div></div>')
+
+    # PR info (online-enriched)
+    for remote in remotes:
+        pr = remote.get("pr")
+        if not pr or not isinstance(pr, dict):
+            continue
+        pr_number = pr.get("number")
+        if not pr_number:
+            continue
+
+        provider = remote.get("provider", "other")
+        pr_state = pr.get("state", "?")
+        pr_url = pr.get("url", "")
+        review = pr.get("review_decision")
+        merged_sha = pr.get("merged_sha")
+        last_synced = pr.get("last_synced")
+
+        # State badge color mapping
+        pr_badge = {
+            "open": "badge-in_progress",
+            "merged": "badge-deployed",
+            "closed": "badge-blocked",
+            "draft": "badge-planned",
+        }.get(pr_state, "badge-enhancement")
+
+        parts.append('<div class="card">')
+        parts.append(f'<h3>Pull Request — {_esc(provider).title()}</h3>')
+        parts.append('<div class="session-info">')
+
+        # PR number + link
+        if pr_url:
+            parts.append(
+                f'<div class="session-field">'
+                f'<div class="field-label">PR</div>'
+                f'<div class="field-value">'
+                f'<a href="{_esc(pr_url)}" rel="noopener" style="color:var(--link)">#{pr_number}</a>'
+                f' <span class="badge {pr_badge}">{_esc(pr_state)}</span>'
+                f'</div></div>'
+            )
+        else:
+            parts.append(
+                f'<div class="session-field">'
+                f'<div class="field-label">PR</div>'
+                f'<div class="field-value">#{pr_number} <span class="badge {pr_badge}">{_esc(pr_state)}</span></div>'
+                f'</div>'
+            )
+
+        if review:
+            review_badge = {
+                "approved": "badge-deployed",
+                "changes_requested": "badge-blocked",
+                "review_required": "badge-planned",
+                "commented": "badge-enhancement",
+            }.get(review, "badge-enhancement")
+            parts.append(
+                f'<div class="session-field">'
+                f'<div class="field-label">Review</div>'
+                f'<div class="field-value"><span class="badge {review_badge}">{_esc(review).replace("_", " ").title()}</span></div>'
+                f'</div>'
+            )
+
+        if merged_sha:
+            parts.append(
+                f'<div class="session-field">'
+                f'<div class="field-label">Merge Commit</div>'
+                f'<div class="field-value"><code>{_esc(merged_sha[:7])}</code></div>'
+                f'</div>'
+            )
+
+        if last_synced:
+            parts.append(
+                f'<div class="session-field">'
+                f'<div class="field-label">Last Synced</div>'
+                f'<div class="field-value">{_format_datetime(last_synced)}</div>'
+                f'</div>'
+            )
+
+        parts.append('</div></div>')
+
+    # Commits table
+    if commits:
+        parts.append('<div class="table-wrap"><table>')
+        parts.append('<thead><tr>')
+        parts.append('<th>SHA</th><th>Subject</th><th>Author</th><th>Date</th><th>Source</th>')
+        parts.append('</tr></thead><tbody>')
+
+        # Detect if we have a remote URL for commit links
+        remote_url = ""
+        provider = "other"
+        if remotes:
+            remote_url = remotes[0].get("url", "")
+            provider = remotes[0].get("provider", "other")
+
+        for c in commits:
+            sha = c.get("sha", "")
+            short_sha = c.get("short_sha", sha[:7])
+            subject = c.get("subject", "")
+            author = c.get("author", "")
+            date = _format_datetime(c.get("authored_date"))
+            source = c.get("link_source", "?")
+            is_merge = c.get("parent_count", 0) >= 2
+
+            # Build SHA link if provider is known
+            sha_html = f'<code>{_esc(short_sha)}</code>'
+            if remote_url and provider == "github":
+                # Parse owner/repo from URL
+                import re
+                m = re.search(r'github\.com[/:]([^/]+/[^/.]+)', remote_url)
+                if m:
+                    repo_path = m.group(1)
+                    sha_html = f'<a href="https://github.com/{_esc(repo_path)}/commit/{_esc(sha)}" rel="noopener" style="color:var(--link)"><code>{_esc(short_sha)}</code></a>'
+            elif remote_url and provider == "gitlab":
+                import re
+                m = re.search(r'gitlab[^/]*/([^/]+/[^/.]+)', remote_url)
+                if m:
+                    repo_path = m.group(1)
+                    sha_html = f'<a href="https://gitlab.com/{_esc(repo_path)}/-/commit/{_esc(sha)}" rel="noopener" style="color:var(--link)"><code>{_esc(short_sha)}</code></a>'
+
+            merge_indicator = ' <span class="badge badge-enhancement" style="font-size:0.7rem">merge</span>' if is_merge else ''
+
+            source_badge = {
+                "auto-hook": "badge-in_progress",
+                "manual": "badge-feature",
+                "retro": "badge-documentation",
+            }.get(source, "badge-enhancement")
+
+            parts.append(
+                f'<tr>'
+                f'<td>{sha_html}{merge_indicator}</td>'
+                f'<td>{_esc(subject[:70])}</td>'
+                f'<td>{_esc(author)}</td>'
+                f'<td>{date}</td>'
+                f'<td><span class="badge {source_badge}" style="font-size:0.7rem">{_esc(source)}</span></td>'
+                f'</tr>'
+            )
+
+        parts.append('</tbody></table></div>')
+
+    return "\n".join(parts)
+
+
 def build_approval(record: dict) -> str:
     """Build the approval section."""
     appr = record.get("approval", {})
@@ -570,6 +747,7 @@ def generate_tc_html(record: dict, css: str) -> str:
         "{{PRIORITY}}": _esc(priority),
         "{{STATS_GRID}}": build_stats_grid(record),
         "{{OVERVIEW_CONTENT}}": build_overview(record),
+        "{{GIT_CONTENT}}": build_git_section(record),
         "{{FILES_CONTENT}}": build_files(record),
         "{{REVISIONS_CONTENT}}": build_revisions(record),
         "{{SUB_TCS_CONTENT}}": build_sub_tcs(record),

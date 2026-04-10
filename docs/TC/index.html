@@ -51,6 +51,14 @@
   --status-deployed-border:  #26a69a;
   --status-deployed-text:    #80cbc4;
 
+  --status-paused-bg:        #3a3a1a;
+  --status-paused-border:    #ffc107;
+  --status-paused-text:      #ffe082;
+
+  --status-voided-bg:        #2a2a2a;
+  --status-voided-border:    #757575;
+  --status-voided-text:      #bdbdbd;
+
   /* Scope/change type colors */
   --scope-feature:       #4caf50;
   --scope-bugfix:        #f44336;
@@ -249,6 +257,19 @@ a:focus-visible {
   background: var(--status-deployed-bg);
   border-color: var(--status-deployed-border);
   color: var(--status-deployed-text);
+}
+
+.badge-paused {
+  background: var(--status-paused-bg);
+  border-color: var(--status-paused-border);
+  color: var(--status-paused-text);
+}
+
+.badge-voided {
+  background: var(--status-voided-bg);
+  border-color: var(--status-voided-border);
+  color: var(--status-voided-text);
+  text-decoration: line-through;
 }
 
 /* Scope badges */
@@ -668,6 +689,8 @@ tbody tr:hover {
 .status-bar-segment.seg-implemented   { background: var(--status-implemented-border); }
 .status-bar-segment.seg-tested        { background: var(--status-tested-border); }
 .status-bar-segment.seg-deployed      { background: var(--status-deployed-border); }
+.status-bar-segment.seg-paused        { background: var(--status-paused-border); }
+.status-bar-segment.seg-voided        { background: var(--status-voided-border); }
 
 /* --- Dashboard Filter Bar (CSS-only) --- */
 .filter-bar {
@@ -720,6 +743,8 @@ tbody tr:hover {
 #filter-implemented:checked ~ .tc-list .tc-card:not([data-status="implemented"]) { display: none; }
 #filter-tested:checked ~ .tc-list .tc-card:not([data-status="tested"]) { display: none; }
 #filter-deployed:checked ~ .tc-list .tc-card:not([data-status="deployed"]) { display: none; }
+#filter-paused:checked ~ .tc-list .tc-card:not([data-status="paused"]) { display: none; }
+#filter-voided:checked ~ .tc-list .tc-card:not([data-status="voided"]) { display: none; }
 
 /* --- TC Card (Dashboard list) --- */
 .tc-card {
@@ -875,9 +900,9 @@ tbody tr:hover {
     <header class="tc-header" aria-label="Dashboard Header">
       <h1>technical-change-skill — Technical Changes</h1>
       <div class="subtitle">
-        <span>7 Technical Changes</span>
+        <span>8 Technical Changes</span>
         <span aria-hidden="true">&bull;</span>
-        <span>Last updated: 2026-04-07 01:02 Eastern Daylight Time</span>
+        <span>Last updated: 2026-04-09 22:24 Eastern Daylight Time</span>
       </div>
     </header>
 
@@ -887,22 +912,23 @@ tbody tr:hover {
       <section aria-label="Status Overview">
         <h2>Status Overview</h2>
         <div class="stats-grid">
-          <div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-planned">Planned</span></span></div>
+          <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-planned">Planned</span></span></div>
 <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-in_progress">In Progress</span></span></div>
 <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-blocked">Blocked</span></span></div>
-<div class="stat-card"><span class="stat-value">5</span><span class="stat-label"><span class="badge badge-implemented">Implemented</span></span></div>
+<div class="stat-card"><span class="stat-value">7</span><span class="stat-label"><span class="badge badge-implemented">Implemented</span></span></div>
 <div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-tested">Tested</span></span></div>
 <div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-deployed">Deployed</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-paused">Paused</span></span></div>
+<div class="stat-card"><span class="stat-value">0</span><span class="stat-label"><span class="badge badge-voided">Voided</span></span></div>
         </div>
       </section>
 
       <!-- Status Distribution Bar -->
       <section aria-label="Status Distribution">
         <h2>Distribution</h2>
-        <div class="status-bar" role="img" aria-label="Planned: 1 (14%), Implemented: 5 (71%), Tested: 1 (14%)">
-          <div class="status-bar-segment seg-planned" style="flex-basis:14.3%" title="Planned: 1 (14%)">1</div>
-<div class="status-bar-segment seg-implemented" style="flex-basis:71.4%" title="Implemented: 5 (71%)">5</div>
-<div class="status-bar-segment seg-tested" style="flex-basis:14.3%" title="Tested: 1 (14%)">1</div>
+        <div class="status-bar" role="img" aria-label="Implemented: 7 (88%), Tested: 1 (12%)">
+          <div class="status-bar-segment seg-implemented" style="flex-basis:87.5%" title="Implemented: 7 (88%)">7</div>
+<div class="status-bar-segment seg-tested" style="flex-basis:12.5%" title="Tested: 1 (12%)">1</div>
         </div>
       </section>
 
@@ -929,23 +955,31 @@ tbody tr:hover {
 <label for="filter-tested">Tested</label>
 <input type="radio" name="filter" id="filter-deployed">
 <label for="filter-deployed">Deployed</label>
+<input type="radio" name="filter" id="filter-paused">
+<label for="filter-paused">Paused</label>
+<input type="radio" name="filter" id="filter-voided">
+<label for="filter-voided">Voided</label>
 </div>
 
         <div class="tc-list">
-          <div class="tc-card" data-status="planned"><a href="records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-007-04-06-26-self-reflection-add-claude-md</div><div class="tc-card-title">Self-Reflection: Add CLAUDE.md Project Instructions</div></div><span class="badge badge-planned">Planned</span></div><div class="tc-card-meta"><span class="badge badge-documentation">documentation</span><span class="badge badge-medium">medium</span><span>Updated: yesterday</span>
+          <div class="tc-card" data-status="implemented"><a href="records/TC-008-04-09-26-git-block-schema/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-008-04-09-26-git-block-schema</div><div class="tc-card-title">Add optional git block to TC record schema</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 11h ago</span>
+<span>Tests: 6/6 pass</span>
+<span class="badge badge-enhancement" style="font-size:0.7rem">1 commit on main</span>
 </div></a></div>
-<div class="tc-card" data-status="implemented"><a href="records/TC-003-04-05-26-demo-screenshot-readme/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-003-04-05-26-demo-screenshot-readme</div><div class="tc-card-title">Demo Screenshot and Hero Image for README</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-documentation">documentation</span><span class="badge badge-medium">medium</span><span>Updated: yesterday</span>
+<div class="tc-card" data-status="implemented"><a href="records/TC-007-04-06-26-self-reflection-add-claude-md/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-007-04-06-26-self-reflection-add-claude-md</div><div class="tc-card-title">Self-Reflection: Add CLAUDE.md Project Instructions</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-documentation">documentation</span><span class="badge badge-medium">medium</span><span>Updated: 2d ago</span>
 </div></a></div>
-<div class="tc-card" data-status="implemented"><a href="records/TC-004-04-05-26-npm-package/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-004-04-05-26-npm-package</div><div class="tc-card-title">npm Package — npx tc-skill</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-infrastructure">infrastructure</span><span class="badge badge-high">high</span><span>Updated: yesterday</span>
+<div class="tc-card" data-status="implemented"><a href="records/TC-003-04-05-26-demo-screenshot-readme/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-003-04-05-26-demo-screenshot-readme</div><div class="tc-card-title">Demo Screenshot and Hero Image for README</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-documentation">documentation</span><span class="badge badge-medium">medium</span><span>Updated: 4d ago</span>
 </div></a></div>
-<div class="tc-card" data-status="implemented"><a href="records/TC-005-04-05-26-retro-from-git/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-005-04-05-26-retro-from-git</div><div class="tc-card-title">/tc retro --from-git Auto-Mode</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: yesterday</span>
+<div class="tc-card" data-status="implemented"><a href="records/TC-004-04-05-26-npm-package/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-004-04-05-26-npm-package</div><div class="tc-card-title">npm Package — npx tc-skill</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-infrastructure">infrastructure</span><span class="badge badge-high">high</span><span>Updated: 4d ago</span>
 </div></a></div>
-<div class="tc-card" data-status="implemented"><a href="records/TC-006-04-05-26-cross-agent-compat/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-006-04-05-26-cross-agent-compat</div><div class="tc-card-title">Cross-Agent Compatibility (Cursor, Codex, Gemini CLI)</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-enhancement">enhancement</span><span class="badge badge-medium">medium</span><span>Updated: yesterday</span>
+<div class="tc-card" data-status="implemented"><a href="records/TC-005-04-05-26-retro-from-git/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-005-04-05-26-retro-from-git</div><div class="tc-card-title">/tc retro --from-git Auto-Mode</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 4d ago</span>
 </div></a></div>
-<div class="tc-card" data-status="implemented"><a href="records/TC-002-04-03-26-first-use-auto-detect/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-002-04-03-26-first-use-auto-detect</div><div class="tc-card-title">First-Use Auto-Detection and Global Skill</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-enhancement">enhancement</span><span class="badge badge-high">high</span><span>Updated: 3d ago</span>
+<div class="tc-card" data-status="implemented"><a href="records/TC-006-04-05-26-cross-agent-compat/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-006-04-05-26-cross-agent-compat</div><div class="tc-card-title">Cross-Agent Compatibility (Cursor, Codex, Gemini CLI)</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-enhancement">enhancement</span><span class="badge badge-medium">medium</span><span>Updated: 4d ago</span>
+</div></a></div>
+<div class="tc-card" data-status="implemented"><a href="records/TC-002-04-03-26-first-use-auto-detect/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-002-04-03-26-first-use-auto-detect</div><div class="tc-card-title">First-Use Auto-Detection and Global Skill</div></div><span class="badge badge-implemented">Implemented</span></div><div class="tc-card-meta"><span class="badge badge-enhancement">enhancement</span><span class="badge badge-high">high</span><span>Updated: 6d ago</span>
 <span>Tests: 2/2 pass</span>
 </div></a></div>
-<div class="tc-card" data-status="tested"><a href="records/TC-001-04-03-26-initial-skill-implementation/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-001-04-03-26-initial-skill-implementation</div><div class="tc-card-title">Initial TC Skill Implementation</div></div><span class="badge badge-tested">Tested</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 3d ago</span>
+<div class="tc-card" data-status="tested"><a href="records/TC-001-04-03-26-initial-skill-implementation/tc_record.html"><div class="tc-card-header"><div><div class="tc-card-id">TC-001-04-03-26-initial-skill-implementation</div><div class="tc-card-title">Initial TC Skill Implementation</div></div><span class="badge badge-tested">Tested</span></div><div class="tc-card-meta"><span class="badge badge-feature">feature</span><span class="badge badge-high">high</span><span>Updated: 6d ago</span>
 <span>Tests: 4/4 pass</span>
 <span>Sub-TCs: 5</span>
 </div></a></div>
@@ -956,16 +990,16 @@ tbody tr:hover {
       <section aria-label="Recent Activity">
         <h2>Recent Activity</h2>
         <div class="card">
-          <div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-007-04-06-26-self-reflection-add-claude-md</strong> R1: TC created by self-reflection skill. Flagged missing CLAUDE.md project instructions.</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-006-04-05-26-cross-agent-compat</strong> R2: Added per-agent install instructions to README for Cursor, Codex CLI, Gemini CLI, and GitHub Copilot with correct paths and trigger syntax</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-003-04-05-26-demo-screenshot-readme</strong> R2: Captured dashboard and TC record screenshots via Playwright, added to README with descriptive alt text</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-003-04-05-26-demo-screenshot-readme</strong> R1: TC created — demo screenshots needed to strengthen registry PR submissions</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-004-04-05-26-npm-package</strong> R1: TC created — npm package to lower adoption barrier</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-005-04-05-26-retro-from-git</strong> R1: TC created — auto-generate retro changelog from git history</span></div>
-<div class="activity-item"><span class="activity-time">yesterday</span><span class="activity-text"><strong>TC-006-04-05-26-cross-agent-compat</strong> R1: TC created — cross-agent support for Cursor, Codex, Gemini CLI</span></div>
-<div class="activity-item"><span class="activity-time">3d ago</span><span class="activity-text"><strong>TC-002-04-03-26-first-use-auto-detect</strong> R1: TC created — first-use auto-detection for new projects</span></div>
-<div class="activity-item"><span class="activity-time">3d ago</span><span class="activity-text"><strong>TC-002-04-03-26-first-use-auto-detect</strong> R2: Implemented: global skill at ~/.claude/skills/tc.md and updated SKILL.md with first-use detection section</span></div>
-<div class="activity-item"><span class="activity-time">3d ago</span><span class="activity-text"><strong>TC-001-04-03-26-initial-skill-implementation</strong> R1: TC created — documenting the full initial implementation of the TC skill across all 7 phases</span></div>
+          <div class="activity-item"><span class="activity-time">1h ago</span><span class="activity-text"><strong>TC-008-04-09-26-git-block-schema</strong> R4: Linked 1 commit(s) via /tc link: 7da0099</span></div>
+<div class="activity-item"><span class="activity-time">11h ago</span><span class="activity-text"><strong>TC-008-04-09-26-git-block-schema</strong> R3: Schema and validator updates complete. All 7 existing TCs still validate. Seven positive/negative test cases on _validate_git_block pass (None, empty, full valid, bad SHA, duplicate SHA, bad provider, bad PR state).</span></div>
+<div class="activity-item"><span class="activity-time">12h ago</span><span class="activity-text"><strong>TC-008-04-09-26-git-block-schema</strong> R2: Started implementation: began editing tc_record.schema.json.</span></div>
+<div class="activity-item"><span class="activity-time">12h ago</span><span class="activity-text"><strong>TC-008-04-09-26-git-block-schema</strong> R1: TC created: add optional git block to tc_record schema as foundation for git integration (Phase 1 of 8-TC plan).</span></div>
+<div class="activity-item"><span class="activity-time">3d ago</span><span class="activity-text"><strong>TC-007-04-06-26-self-reflection-add-claude-md</strong> R1: TC created by self-reflection skill. Flagged missing CLAUDE.md project instructions.</span></div>
+<div class="activity-item"><span class="activity-time">4d ago</span><span class="activity-text"><strong>TC-006-04-05-26-cross-agent-compat</strong> R2: Added per-agent install instructions to README for Cursor, Codex CLI, Gemini CLI, and GitHub Copilot with correct paths and trigger syntax</span></div>
+<div class="activity-item"><span class="activity-time">4d ago</span><span class="activity-text"><strong>TC-003-04-05-26-demo-screenshot-readme</strong> R2: Captured dashboard and TC record screenshots via Playwright, added to README with descriptive alt text</span></div>
+<div class="activity-item"><span class="activity-time">4d ago</span><span class="activity-text"><strong>TC-003-04-05-26-demo-screenshot-readme</strong> R1: TC created — demo screenshots needed to strengthen registry PR submissions</span></div>
+<div class="activity-item"><span class="activity-time">4d ago</span><span class="activity-text"><strong>TC-004-04-05-26-npm-package</strong> R1: TC created — npm package to lower adoption barrier</span></div>
+<div class="activity-item"><span class="activity-time">4d ago</span><span class="activity-text"><strong>TC-005-04-05-26-retro-from-git</strong> R1: TC created — auto-generate retro changelog from git history</span></div>
         </div>
       </section>
 
@@ -973,7 +1007,7 @@ tbody tr:hover {
       <section aria-label="Scope Breakdown">
         <h2>Scope Breakdown</h2>
         <div class="stats-grid">
-          <div class="stat-card"><span class="stat-value">2</span><span class="stat-label"><span class="badge badge-feature">feature</span></span></div>
+          <div class="stat-card"><span class="stat-value">3</span><span class="stat-label"><span class="badge badge-feature">feature</span></span></div>
 <div class="stat-card"><span class="stat-value">1</span><span class="stat-label"><span class="badge badge-infrastructure">infrastructure</span></span></div>
 <div class="stat-card"><span class="stat-value">2</span><span class="stat-label"><span class="badge badge-documentation">documentation</span></span></div>
 <div class="stat-card"><span class="stat-value">2</span><span class="stat-label"><span class="badge badge-enhancement">enhancement</span></span></div>
@@ -984,7 +1018,7 @@ tbody tr:hover {
 
     <!-- Footer -->
     <footer class="tc-footer">
-      <p>Generated on 2026-04-07 01:02 Eastern Daylight Time &bull; TC Skill v1.0.0</p>
+      <p>Generated on 2026-04-09 22:24 Eastern Daylight Time &bull; TC Skill v1.0.0</p>
     </footer>
   </div>
 </body>

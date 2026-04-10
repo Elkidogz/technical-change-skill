@@ -1,8 +1,8 @@
 {
   "project_name": "technical-change-skill",
   "created": "2026-04-03T16:00:00-04:00",
-  "updated": "2026-04-06T00:00:00-04:00",
-  "next_tc_number": 8,
+  "updated": "2026-04-09T10:30:00-04:00",
+  "next_tc_number": 9,
   "records": [
     {
       "tc_id": "TC-001-04-03-26-initial-skill-implementation",
@@ -79,20 +79,32 @@
     {
       "tc_id": "TC-007-04-06-26-self-reflection-add-claude-md",
       "title": "Self-Reflection: Add CLAUDE.md Project Instructions",
-      "status": "planned",
+      "status": "implemented",
       "scope": "documentation",
       "priority": "medium",
       "created": "2026-04-06T00:00:00-04:00",
-      "updated": "2026-04-06T00:00:00-04:00",
+      "updated": "2026-04-07T16:00:00-04:00",
       "path": "records/TC-007-04-06-26-self-reflection-add-claude-md",
       "sub_tc_count": 0,
       "test_summary": { "total": 0, "pass": 0, "fail": 0, "pending": 0, "skip": 0, "blocked": 0 }
+    },
+    {
+      "tc_id": "TC-008-04-09-26-git-block-schema",
+      "title": "Add optional git block to TC record schema",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-04-09T10:00:00-04:00",
+      "updated": "2026-04-09T10:30:00-04:00",
+      "path": "records/TC-008-04-09-26-git-block-schema",
+      "sub_tc_count": 0,
+      "test_summary": { "total": 6, "pass": 6, "fail": 0, "pending": 0, "skip": 0, "blocked": 0 }
     }
   ],
   "statistics": {
-    "total": 7,
-    "by_status": { "planned": 1, "in_progress": 0, "blocked": 0, "implemented": 5, "tested": 1, "deployed": 0 },
-    "by_scope": { "feature": 2, "bugfix": 0, "refactor": 0, "infrastructure": 1, "documentation": 2, "hotfix": 0, "enhancement": 2 },
-    "by_priority": { "critical": 0, "high": 4, "medium": 3, "low": 0 }
+    "total": 8,
+    "by_status": { "planned": 0, "in_progress": 0, "blocked": 0, "implemented": 7, "tested": 1, "deployed": 0, "paused": 0, "voided": 0 },
+    "by_scope": { "feature": 3, "bugfix": 0, "refactor": 0, "infrastructure": 1, "documentation": 2, "hotfix": 0, "enhancement": 2 },
+    "by_priority": { "critical": 0, "high": 5, "medium": 3, "low": 0 }
   }
 }

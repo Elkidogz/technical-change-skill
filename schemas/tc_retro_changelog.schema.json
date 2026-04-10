@@ -42,7 +42,7 @@
           },
           "status": {
             "type": "string",
-            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed"],
+            "enum": ["planned", "in_progress", "blocked", "implemented", "tested", "deployed", "paused", "voided"],
             "default": "deployed",
             "description": "Current status (typically 'deployed' for retroactive entries)"
           },
@@ -100,6 +100,43 @@
             "items": { "type": "integer", "minimum": 0 },
             "default": [],
             "description": "Indices of related changes in this changelog (0-based)"
+          },
+          "commits": {
+            "type": "array",
+            "default": [],
+            "description": "Raw git commit data from --from-git mode. Used to populate the TC record's git.commits[] block. Absent when changelog is built manually.",
+            "items": {
+              "type": "object",
+              "required": ["sha", "author", "date", "subject", "is_merge", "files"],
+              "properties": {
+                "sha": {
+                  "type": "string",
+                  "description": "Full 40-char commit SHA"
+                },
+                "author": {
+                  "type": "string",
+                  "description": "Commit author name"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "ISO 8601 commit date"
+                },
+                "subject": {
+                  "type": "string",
+                  "description": "Commit subject line"
+                },
+                "is_merge": {
+                  "type": "boolean",
+                  "description": "True if this is a merge commit (2+ parents)"
+                },
+                "files": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Files changed by this commit"
+                }
+              },
+              "additionalProperties": false
+            }
           }
         },
         "additionalProperties": false

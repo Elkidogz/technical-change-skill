@@ -63,9 +63,15 @@ docs/TC/
 planned → in_progress → implemented → tested → deployed
    │           │              │           │         │
    └→ blocked ←┘              └→ in_progress ←──────┘
-        │                        (rework/hotfix)
-        └→ planned
+   │    │  │                     (rework/hotfix)
+   │    │  └→ paused → in_progress
+   │    │       │
+   │    └──────→└→ voided (terminal — cancelled)
+   └→ voided
 ```
+
+- **paused**: Development work temporarily stopped. Can resume to `in_progress` or cancel to `voided`.
+- **voided**: TC cancelled entirely. Terminal state — cannot transition out.
 
 ---
 
@@ -102,7 +108,7 @@ Initialize TC tracking in the current project. Run this once per project.
      "records": [],
      "statistics": {
        "total": 0,
-       "by_status": {"planned":0,"in_progress":0,"blocked":0,"implemented":0,"tested":0,"deployed":0},
+       "by_status": {"planned":0,"in_progress":0,"blocked":0,"implemented":0,"tested":0,"deployed":0,"paused":0,"voided":0},
        "by_scope": {"feature":0,"bugfix":0,"refactor":0,"infrastructure":0,"documentation":0,"hotfix":0,"enhancement":0},
        "by_priority": {"critical":0,"high":0,"medium":0,"low":0}
      }
@@ -313,6 +319,55 @@ Auto-generate the retro_changelog.json directly from git history instead of buil
 | `--author NAME` | `retroactive` | Default author field in the changelog |
 | `--time-window HOURS` | `2` | Clustering time window in hours |
 
+### /tc link <tc-id> [<sha>|HEAD|--range A..B]
+Link git commits to a TC record. Appends to `git.commits[]`, merges files into `files_affected[]`, adds a revision entry.
+
+**Steps:**
+1. Resolve the SHA (default: HEAD). For `--range`, resolve all commits in the range.
+2. For each commit: read metadata via `git show`, skip if SHA already linked (dedup).
+3. Append to `git.commits[]` with `link_source: "manual"`.
+4. Merge `files_changed` into `files_affected[]` (skip duplicates).
+5. Append revision history entry: "Linked N commit(s)".
+6. Regenerate TC HTML.
+
+### /tc git status
+Show the git integration state of all TC records.
+
+**Output:**
+- **Unlinked TCs**: Records with no `git` block (candidates for `/tc link`)
+- **Linked TCs**: Records with `git.commits[]` populated (with commit count)
+- **Online-enriched TCs**: Records with PR metadata
+- **Unlinked commits**: Recent commits on the current branch not linked to any TC
+- **Uncommitted files**: Matching `files_affected[]` of in-progress TCs
+
+### /tc pr link <tc-id> [<pr-number>]
+**(Online opt-in)** Link a PR/MR to a TC record. Requires `gh` (GitHub) or `glab` (GitLab) CLI.
+
+**Steps:**
+1. Auto-detect provider from `git remote -v`.
+2. If no PR number given, find PR for current branch via `gh pr view <branch>`.
+3. Populate `git.remotes[].pr` with number, URL, state, review decision, merge commit.
+4. Append revision entry. Regenerate TC HTML.
+5. **Graceful degradation**: if CLI is missing or unauthenticated, report and exit cleanly.
+
+### /tc sync [<tc-id>|--all]
+**(Online opt-in)** Refresh PR metadata for TCs with linked PRs.
+
+**Steps:**
+1. For each TC with `git.remotes[].pr.number` populated:
+   - Query current PR state via `gh pr view` or `glab mr view`.
+   - Update state, review_decision, merged_sha, last_synced.
+2. If PR state changed, append revision entry.
+3. Report: "Updated N TC(s)" or "No changes (offline or up-to-date)".
+
+### /tc git install-merge-driver
+Register the TC registry merge driver to handle `tc_registry.json` conflicts during rebases and merges.
+
+**Steps:**
+1. Run: `git config merge.tc-registry.driver 'python "<path>/tc_registry_merge.py" %O %A %B'`
+2. Add to `.gitattributes`: `docs/TC/tc_registry.json merge=tc-registry`
+3. Report: "Merge driver registered."
+
 ---
 
 ## Auto-Detection Rules — Non-Blocking Subagent Pattern
@@ -387,6 +442,39 @@ python "generators/generate_retro_tcs.py" "<retro_changelog.json>" "<docs/TC/>"
 
 # Generate retro_changelog.json from git history
 python "generators/generate_retro_from_git.py" [--repo-path .] [--output retro_changelog.json] [--project-name "Name"] [--since 2024-01-01] [--until 2026-04-05]
+
+# --- Git Integration ---
+
+# Link commit(s) to a TC record
+python "generators/tc_git_link.py" "<tc_record.json>" [<sha>|HEAD] [--range A..B]
+
+# Show git integration status for all TCs (finds unlinked TCs + unlinked commits)
+python "generators/tc_git_status.py" "<docs/TC/>" [--unlinked-only] [--show-candidates]
+
+# Auto-link HEAD to the single in-progress TC (used by PostToolUse hook)
+python "generators/tc_git_autolink.py" --if-commit [<docs/TC/>]
+
+# Pre-commit advisory: warn if staged files aren't in any active TC (used by PreToolUse hook)
+python "generators/tc_precommit_check.py" --if-commit [<docs/TC/>]
+
+# Registry 3-way merge driver (register with git config for conflict resolution)
+python "generators/tc_registry_merge.py" <base> <ours> <theirs>
+
+# --- Online (opt-in) ---
+
+# Link a PR/MR to a TC record (requires gh or glab CLI)
+python "generators/tc_pr_link.py" "<tc_record.json>" [<pr_number>]
+
+# Refresh PR metadata for all TCs with linked PRs
+python "generators/tc_sync.py" "<docs/TC/>" [<tc_id>]
+
+# --- Session Lifecycle ---
+
+# Display session start report with active TC handoff data
+python "generators/tc_session_start.py" "<docs/TC/>" [--json]
+
+# Archive current session and write handoff data
+python "generators/tc_session_end.py" "<tc_record.json>" [--summary "..."] [--next "..."]
 ```
 
 All generators use Python stdlib only — no external dependencies.

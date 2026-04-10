@@ -44,6 +44,14 @@
   --status-deployed-border:  #26a69a;
   --status-deployed-text:    #80cbc4;
 
+  --status-paused-bg:        #3a3a1a;
+  --status-paused-border:    #ffc107;
+  --status-paused-text:      #ffe082;
+
+  --status-voided-bg:        #2a2a2a;
+  --status-voided-border:    #757575;
+  --status-voided-text:      #bdbdbd;
+
   /* Scope/change type colors */
   --scope-feature:       #4caf50;
   --scope-bugfix:        #f44336;
@@ -242,6 +250,19 @@ a:focus-visible {
   background: var(--status-deployed-bg);
   border-color: var(--status-deployed-border);
   color: var(--status-deployed-text);
+}
+
+.badge-paused {
+  background: var(--status-paused-bg);
+  border-color: var(--status-paused-border);
+  color: var(--status-paused-text);
+}
+
+.badge-voided {
+  background: var(--status-voided-bg);
+  border-color: var(--status-voided-border);
+  color: var(--status-voided-text);
+  text-decoration: line-through;
 }
 
 /* Scope badges */
@@ -661,6 +682,8 @@ tbody tr:hover {
 .status-bar-segment.seg-implemented   { background: var(--status-implemented-border); }
 .status-bar-segment.seg-tested        { background: var(--status-tested-border); }
 .status-bar-segment.seg-deployed      { background: var(--status-deployed-border); }
+.status-bar-segment.seg-paused        { background: var(--status-paused-border); }
+.status-bar-segment.seg-voided        { background: var(--status-voided-border); }
 
 /* --- Dashboard Filter Bar (CSS-only) --- */
 .filter-bar {
@@ -713,6 +736,8 @@ tbody tr:hover {
 #filter-implemented:checked ~ .tc-list .tc-card:not([data-status="implemented"]) { display: none; }
 #filter-tested:checked ~ .tc-list .tc-card:not([data-status="tested"]) { display: none; }
 #filter-deployed:checked ~ .tc-list .tc-card:not([data-status="deployed"]) { display: none; }
+#filter-paused:checked ~ .tc-list .tc-card:not([data-status="paused"]) { display: none; }
+#filter-voided:checked ~ .tc-list .tc-card:not([data-status="voided"]) { display: none; }
 
 /* --- TC Card (Dashboard list) --- */
 .tc-card {

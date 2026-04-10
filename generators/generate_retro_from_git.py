@@ -659,6 +659,18 @@ def build_changelog_entry(commits: list[dict]) -> dict:
     # Tags
     tags = _collect_tags(sorted_commits, scope)
 
+    # Serialize commit metadata for git block population in generate_retro_tcs.py
+    commit_records: list[dict] = []
+    for commit in sorted_commits:
+        commit_records.append({
+            "sha": commit["sha"],
+            "author": commit["author"],
+            "date": commit["date"].isoformat(),
+            "subject": commit["subject"],
+            "is_merge": commit["is_merge"],
+            "files": [f.replace("\\", "/") for f in commit["files"]],
+        })
+
     entry: dict = {
         "title": title,
         "scope": scope,
@@ -668,6 +680,7 @@ def build_changelog_entry(commits: list[dict]) -> dict:
         "description": description,
         "files": all_files,
         "tags": tags,
+        "commits": commit_records,
     }
 
     if motivation:

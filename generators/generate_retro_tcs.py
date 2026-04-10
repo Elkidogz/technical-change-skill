@@ -246,6 +246,32 @@ def build_tc_record(
         },
     }
 
+    # Populate git block if commit data was passed through from --from-git
+    raw_commits = change.get("commits", [])
+    if raw_commits:
+        git_commits = []
+        for c in raw_commits:
+            parent_count = 2 if c.get("is_merge", False) else 1
+            git_commits.append({
+                "sha": c["sha"],
+                "short_sha": c["sha"][:7],
+                "author": c.get("author", author),
+                "authored_date": c.get("date", iso_date),
+                "subject": c.get("subject", ""),
+                "branch": None,
+                "parent_count": parent_count,
+                "files_changed": [f.replace("\\", "/") for f in c.get("files", [])],
+                "linked_at": now,
+                "link_source": "retro",
+            })
+        record["git"] = {
+            "repo_root": None,
+            "initial_branch": None,
+            "commits": git_commits,
+            "remotes": [],
+            "release_tags": [change["version"]] if change.get("version") else [],
+        }
+
     return record
 
 

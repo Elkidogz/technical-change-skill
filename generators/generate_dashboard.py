@@ -200,6 +200,37 @@ def build_tc_cards(records: list[dict], tc_root: Path | None = None) -> str:
         if rec.get("sub_tc_count", 0) > 0:
             parts.append(f'<span>Sub-TCs: {rec["sub_tc_count"]}</span>')
 
+        # Git info badges (read from full record if available)
+        if tc_root:
+            record_path = tc_root / rec.get("path", "") / "tc_record.json"
+            if record_path.exists():
+                try:
+                    with open(record_path, "r", encoding="utf-8") as rf:
+                        full_rec = json.load(rf)
+                    git = full_rec.get("git")
+                    if git and isinstance(git, dict):
+                        commits = git.get("commits", [])
+                        if commits:
+                            branch = git.get("initial_branch", "")
+                            parts.append(
+                                f'<span class="badge badge-enhancement" style="font-size:0.7rem">'
+                                f'{len(commits)} commit{"s" if len(commits) != 1 else ""}'
+                                f'{" on " + _esc(branch) if branch else ""}'
+                                f'</span>'
+                            )
+                        for remote in git.get("remotes", []):
+                            pr = remote.get("pr")
+                            if pr and isinstance(pr, dict) and pr.get("number"):
+                                pr_state = pr.get("state", "?")
+                                pr_badge = {"open": "in_progress", "merged": "deployed", "closed": "blocked", "draft": "planned"}.get(pr_state, "enhancement")
+                                parts.append(
+                                    f'<span class="badge badge-{pr_badge}" style="font-size:0.7rem">'
+                                    f'PR #{pr["number"]} {_esc(pr_state)}'
+                                    f'</span>'
+                                )
+                except (json.JSONDecodeError, OSError):
+                    pass
+
         parts.append(f'</div></a></div>')
 
     return "\n".join(parts)
